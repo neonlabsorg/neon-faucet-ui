@@ -1,0 +1,36 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@600&display=swap');
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+html {
+  font-falimy: 'Inter', 'Ubuntu', 'Helvetica', sans-serif;
+}
+$breakpoints: (xSmall: 500px, small: 720px, medium: 960px, large: 1280px);
+$dark_background: #0E0E0E;
+$pink: #CE3A8B;
+$blue: #4355F9;
+$gray: #C4C4C4;
+$light-gray: #F3F6FD;
+$light: #EBEBF1;
+$white: #fff;
+$offset_grid_top: 80px;
+$offset_grid_top_xs: 50px;
+$header_height: 80px;
+$cube_side: 75px;
+$plate_width: 1120px;
+$dark: #0E0E0E;
+$white: #fff;
+$grey-purple: #8286AB;
+$red: #FD4040;
+$blue: #4355F9;
+$purple: #CE3A8B;
+$graydark: #40444F;
+$gray: #464646;
+$inp-bg-dark: #242424;
+$inp-bg-light: #F7F8FF;
+@import './vendor/include-media.scss';
+@import './components/common/Loader/index.scss';
+@import './components/common/Layout/index.scss';
+@import './components/common/Button/index.scss';
+@import './components/common/NumericalInput/index.scss';
+@import './components/TokenGetter/index.scss';
