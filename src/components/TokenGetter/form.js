@@ -29,8 +29,15 @@ export default function Form({className = ''}) {
   const [airdropPending, setAirdropPending] = useState(false)
 
   const postAirdrop = () => {
-    const {hostname} = window.location
-    const url = `${hostname}/request_airdrop`
+    console.log(process.env)
+    const hostname = process.env.REACT_APP_FAUCET_URL ? process.env.REACT_APP_FAUCET_URL : window.location.hostname
+    const url = token.symbol === 'NEON' ? `${hostname}/request_neon`
+      : `${hostname}/request_erc20`
+    const data = token.symbol === 'NEON' ? {
+      amount, wallet: account
+    } : {
+      amount, wallet: account, token: token.address
+    }
     setAirdropPending(true)
     axios( {
       url,
@@ -38,9 +45,7 @@ export default function Form({className = ''}) {
       headers: {
         'content-type': 'text/plain',
       },
-      data: {
-        amount, wallet: account, token: token.address
-      }
+      data
     }).then(resp => {
       const text = resp.statusText
       console.dir(resp)

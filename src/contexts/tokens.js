@@ -4,6 +4,7 @@ import { useNetworkType } from "../hooks";
 import ERC20_ABI from '../hooks/abi/erc20.json'
 import {NEON_TOKEN_MINT, NEON_TOKEN_MINT_DECIMALS} from 'neon-portal/src/constants'
 import { CHAIN_IDS } from "../connectors";
+import { usePrevious } from "../utils";
 
 export const TokensContext = createContext({
   list: [],
@@ -33,6 +34,7 @@ export function TokensProvider({ children = undefined}) {
   }), [])
   const {chainId} = useNetworkType()
   const {library, account} = useWeb3React()
+  const prevAccountState = usePrevious()
   const [list, setTokenList] = useState(initialTokenListState)
   const [pending, setPending] = useState(false)
   const [error, setError] = useState('')
@@ -88,9 +90,6 @@ export function TokensProvider({ children = undefined}) {
     })
   }
   const updateTokenList = () => {
-    setTokenErrors({})
-    setTokenList([])
-    setBalances({})
     setPending(true)
     fetch(`https://raw.githubusercontent.com/neonlabsorg/token-list/main/tokenlist.json`)
     .then((resp) => {
@@ -106,11 +105,23 @@ export function TokensProvider({ children = undefined}) {
     }).finally(() => setPending(false))
   }
 
-
   useEffect(() => {
-    updateTokenList()
+    if (!prevAccountState && account && account.length) {
+      fetch(`${process.env.REACT_APP_FAUCET_URL}/request_erc20_list`)
+      .then((resp) => {
+        console.log('list response: ', resp)
+        updateTokenList()
+      }).catch(e => {
+        console.warn(e)
+        updateTokenList()
+      })
+    } else if (!account && prevAccountState && prevAccountState.length) {
+      setTokenErrors({})
+      setTokenList([])
+      setBalances({})
+    }
   // eslint-disable-next-line
-  }, [chainId, account])
+  }, [account])
 
   return <TokensContext.Provider
     value={{list, pending, error, tokenErrors, balances, updateTokenList}}>
