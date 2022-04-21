@@ -36,7 +36,7 @@ export default function Form({className = ''}) {
     const data = token.symbol === 'NEON' ? {
       amount, wallet: account
     } : {
-      amount, wallet: account, token: token.address
+      amount, wallet: account, token_addr: token.address
     }
     setAirdropPending(true)
     axios( {
