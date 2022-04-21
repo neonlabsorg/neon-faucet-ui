@@ -5,6 +5,7 @@ import ERC20_ABI from '../hooks/abi/erc20.json'
 import {NEON_TOKEN_MINT, NEON_TOKEN_MINT_DECIMALS} from 'neon-portal/src/constants'
 import { CHAIN_IDS } from "../connectors";
 import { usePrevious } from "../utils";
+import { useHttp } from "../utils/useHttp";
 
 export const TokensContext = createContext({
   list: [],
@@ -26,6 +27,7 @@ const NEON_TOKEN_MODEL = {
 }
 
 export function TokensProvider({ children = undefined}) {
+  const {get} = useHttp()
   const initialTokenListState = useMemo(() => Object.keys(CHAIN_IDS).map(key => {
     const chainId = CHAIN_IDS[key]
     const model = Object.assign({}, NEON_TOKEN_MODEL)
@@ -59,21 +61,23 @@ export function TokensProvider({ children = undefined}) {
       const balance = await library.eth.getBalance(account)
       return +(balance / Math.pow(10, token.decimals)).toFixed(4)
     }
-
     const tokenInstance = new library.eth.Contract(ERC20_ABI, token.address)
     const balance = await tokenInstance.methods.balanceOf(account).call()
     return balance / Math.pow(10, token.decimals)
   }
 
-  const requestListBalances = async () => {
+  const requestListBalances = async (list) => {
+    console.log(list)
     for (const item of list) {
       let balance
       try {
+        // console.log(account)
         if (account) {
           balance = await getEthBalance(item)
         } else {
           balance = undefined
         }
+        console.log(item.symbol, balance)
         setTimeout(() => addBalance(item.symbol, balance))
       } catch (e) {
         console.warn(e)
@@ -85,20 +89,13 @@ export function TokensProvider({ children = undefined}) {
     const fullList = [...initialTokenListState].concat(source)
     const newList = fullList.filter((item) => item.chainId === filteringChainId)
     setTokenList(newList)
-    setTimeout(async () => {
-      await requestListBalances()
-    })
+    await requestListBalances(newList)
   }
   const updateTokenList = () => {
     setPending(true)
-    fetch(`https://raw.githubusercontent.com/neonlabsorg/token-list/main/tokenlist.json`)
-    .then((resp) => {
-      if (resp.ok) {
-        resp.json().then(data => {
-          mergeTokenList(data.tokens)
-        })
-          .catch((err) => setError(err.message))
-      }
+    get(`https://raw.githubusercontent.com/neonlabsorg/token-list/main/tokenlist.json`)
+    .then(({data}) => {
+      mergeTokenList(data.tokens)
     })
     .catch(err => {
       setError(`Failed to fetch neon transfer token list: ${err.message}`)
@@ -107,7 +104,7 @@ export function TokensProvider({ children = undefined}) {
 
   useEffect(() => {
     if (!prevAccountState && account && account.length) {
-      fetch(`${process.env.REACT_APP_FAUCET_URL}/request_erc20_list`)
+      get(`${process.env.REACT_APP_FAUCET_URL}/request_erc20_list`)
       .then((resp) => {
         console.log('list response: ', resp)
         updateTokenList()
