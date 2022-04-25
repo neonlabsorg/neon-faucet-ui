@@ -13,7 +13,7 @@ export default function Form({className = ''}) {
   const responseTimeout = useRef(null)
   const [amount, setAmount] = useState(0)
   const [token, setToken] = useState({})
-  const [isMaxAmountIncreaced, setIsMaxAmointIncreased] = useState(false)
+  const [isMaxAmountIncreased, setIsMaxAmointIncreased] = useState(false)
   const {account} = useWeb3React()
   const [response, setResponse] = useState({
     success: true,
@@ -55,6 +55,7 @@ export default function Form({className = ''}) {
   }
 
   const updateAmount = (value) => {
+    console.log(value, isMaxAmountIncreased)
     setAmount(value)
     if (value < 0) return
     if (value > 100) setIsMaxAmointIncreased(true)
@@ -62,25 +63,27 @@ export default function Form({className = ''}) {
   }
 
   return <div className={`${className} tg-form`}>
-  <div className='tg-form__amount'>
-    
-    <TokenSelect className='w-full mb-6' tokenName={token.name} onChoose={setToken}/>
-    <NumericalInput
-      className="tg-form__input"
-      value={amount}
-      error={isMaxAmountIncreaced ? 'true' : 'false'}
-      onUserInput={val => {
-        updateAmount(+val)
-      }}
-    />
-  </div>
-  <div className='tg-form__footer'>
-    <div className='tg-form__btn-wrapper flex items-center'>
-      <Button className='tg-form__btn' disabled={isMaxAmountIncreaced || amount === 0 || (response && response.message) || airdropPending === true || !token.address}
-        onClick={() => postAirdrop()}>{'test airdrop'}</Button>
+    <div className='tg-form__amount'>
+      
+      <TokenSelect className='w-full mb-6' tokenName={token.name} onChoose={setToken}/>
+      <NumericalInput
+        className="tg-form__input"
+        value={amount}
+        error={isMaxAmountIncreased ? 'true' : 'false'}
+        onUserInput={val => {
+          updateAmount(+val)
+        }}
+      />
     </div>
-    { airdropPending ? <Loader className='ml-4' /> : null }
-  </div>
+    <div className='tg-form__footer'>
+        <Button className='w-full'
+          disabled={isMaxAmountIncreased || amount === 0 || (response && response.message) || airdropPending === true || (token.symbol !== 'NEON' && !token.address)}
+          onClick={() => postAirdrop()}>{'test airdrop'}</Button>
+      { airdropPending ? <Loader className='my-4' /> : null }
+    </div>
+    {isMaxAmountIncreased ? <div className={`tg-form__res-text mt-4 text-center`}>
+      {'Maximum limit for one airdrop is 100 tokens per minute'}
+    </div> : null}
     {response.message && response.message.length ? 
     <div className='tg-form__response'>
       <div className={`tg-form__res-text ${!response.success ? 'tg-form__res-text--error' : ''}`}>{response.message}</div>
