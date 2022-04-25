@@ -24,7 +24,7 @@ export default function Form({className = ''}) {
     setResponse(resp)
     responseTimeout.current = setTimeout(() => {
       setResponse({success: true, message: ''})
-    }, 10000)
+    }, 60000)
   }
 
   const [airdropPending, setAirdropPending] = useState(false)
@@ -40,15 +40,13 @@ export default function Form({className = ''}) {
     }
     setAirdropPending(true)
     post(url, data).then(resp => {
-      const text = resp.statusText
-      console.dir(resp)
       updateResponse({
         success: true,
-        message: text
+        message: 'Transferred successfully'
       })
     }).catch(err => {
       const message = err.response === undefined ? 
-        `Request seems to be blocked by CORS policy. Response isn't avaliable` : err.message
+        `Request seems to be blocked by CORS policy. Response isn't avaliable` : err.response.data || 'unknown error'
       updateResponse({
         success: false,
         message
@@ -59,15 +57,13 @@ export default function Form({className = ''}) {
   const updateAmount = (value) => {
     setAmount(value)
     if (value < 0) return
-    if (value > 1000) setIsMaxAmointIncreased(true)
+    if (value > 100) setIsMaxAmointIncreased(true)
     else setIsMaxAmointIncreased(false)
   }
 
   return <div className={`${className} tg-form`}>
   <div className='tg-form__amount'>
-    <div className='tg-form__label-wrapper'>
-    {airdropPending ? <Loader /> : null}
-    </div>
+    
     <TokenSelect className='w-full mb-6' tokenName={token.name} onChoose={setToken}/>
     <NumericalInput
       className="tg-form__input"
@@ -79,10 +75,11 @@ export default function Form({className = ''}) {
     />
   </div>
   <div className='tg-form__footer'>
-    <div className='tg-form__btn-wrapper'>
-      <Button className='tg-form__btn' disabled={isMaxAmountIncreaced || amount === 0 || (response && response.message) || airdropPending === true}
+    <div className='tg-form__btn-wrapper flex items-center'>
+      <Button className='tg-form__btn' disabled={isMaxAmountIncreaced || amount === 0 || (response && response.message) || airdropPending === true || !token.address}
         onClick={() => postAirdrop()}>{'test airdrop'}</Button>
     </div>
+    { airdropPending ? <Loader className='ml-4' /> : null }
   </div>
     {response.message && response.message.length ? 
     <div className='tg-form__response'>

@@ -99,7 +99,6 @@ export const TokenSelect = ({className = '', tokenName = '', onChoose = () => {}
     </div>
     {opened === true ?
       <div>
-        
         <input
           className='w-full bg-dark-600 py-6 px-4 border-b border-l border-r border-purple-800'
           placeholder={'Choose or paste token'}
