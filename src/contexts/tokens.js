@@ -67,7 +67,6 @@ export function TokensProvider({ children = undefined}) {
   }
 
   const requestListBalances = async (list) => {
-    console.log(list)
     for (const item of list) {
       let balance
       try {
@@ -77,7 +76,6 @@ export function TokensProvider({ children = undefined}) {
         } else {
           balance = undefined
         }
-        console.log(item.symbol, balance)
         setTimeout(() => addBalance(item.symbol, balance))
       } catch (e) {
         console.warn(e)
@@ -85,17 +83,17 @@ export function TokensProvider({ children = undefined}) {
     }
   }
 
-  const mergeTokenList = async (source = []) => {
-    const fullList = [...initialTokenListState].concat(source)
+  const mergeTokenList = async (source = [], availableTokens = []) => {
+    const fullList = [...initialTokenListState].concat(source.filter( item => availableTokens.includes(item.address) ))
     const newList = fullList.filter((item) => item.chainId === filteringChainId)
     setTokenList(newList)
     await requestListBalances(newList)
   }
-  const updateTokenList = () => {
+  const updateTokenList = (availableTokens = []) => {
     setPending(true)
     get(`https://raw.githubusercontent.com/neonlabsorg/token-list/main/tokenlist.json`)
     .then(({data}) => {
-      mergeTokenList(data.tokens)
+      mergeTokenList(data.tokens, availableTokens)
     })
     .catch(err => {
       setError(`Failed to fetch neon transfer token list: ${err.message}`)
@@ -105,12 +103,8 @@ export function TokensProvider({ children = undefined}) {
   useEffect(() => {
     if (!prevAccountState && account && account.length) {
       get(`${process.env.REACT_APP_FAUCET_URL}/request_erc20_list`)
-      .then((resp) => {
-        console.log('list response: ', resp)
-        updateTokenList()
-      }).catch(e => {
-        console.warn(e)
-        updateTokenList()
+      .then(({data}) => {
+        updateTokenList(data)
       })
     } else if (!account && prevAccountState && prevAccountState.length) {
       setTokenErrors({})
