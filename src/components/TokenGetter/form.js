@@ -63,8 +63,8 @@ export default function Form({className = ''}) {
   }
 
   return <div className={`${className} tg-form`}>
+    <h1 className='text-xl mb-6'>Token dropper for test environment</h1>
     <div className='tg-form__amount'>
-      
       <TokenSelect className='w-full mb-6' tokenName={token.name} onChoose={setToken}/>
       <NumericalInput
         className="tg-form__input"
