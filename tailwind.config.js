@@ -33,6 +33,7 @@ module.exports = {
       colors: {
         'ocean-blue': 'rgba(94,118,153, 0.15)',
         'light-gray': '#F3F6FD',
+        'light-gray-op25': 'rgba(243,246,253, 0.25)',
         'pinky-white': '#F7F8FF',
         'blue-main': "#4355F9",
         'grey': '#8B88AA',
@@ -46,7 +47,8 @@ module.exports = {
         'dark-200': '#5B5B5B',
         'op-15-black': 'rgba(0, 0, 0, 0.15)',
         'op04-white': 'rgba(255, 255, 255, 0.04)',
-        'op15-white': 'rgba(255, 255, 255, 0.15)'
+        'op15-white': 'rgba(255, 255, 255, 0.15)',
+        
       }
     },
     fill: {
