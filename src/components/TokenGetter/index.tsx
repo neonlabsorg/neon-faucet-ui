@@ -1,11 +1,9 @@
-import { useEffect } from 'react';
 import { useWeb3React, UnsupportedChainIdError } from '@web3-react/core'
 import Form from './form'
 import Web3Status from '../common/Web3Status';
 
 export default function TokenGetter() {
   const { account, error } = useWeb3React()
-  useEffect(() => console.log(account))
   const renderByAccountState = () => {
     if (error) {
       return <div className='token-getter__error-wrapper'>
