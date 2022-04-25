@@ -39,14 +39,13 @@ export default function Form({className = ''}) {
       amount, wallet: account, token_addr: token.address
     }
     setAirdropPending(true)
-    post(url, data).then(resp => {
+    post(url, data).then(() => {
       updateResponse({
         success: true,
         message: 'Transferred successfully'
       })
     }).catch(err => {
-      const message = err.response === undefined ? 
-        `Request seems to be blocked by CORS policy. Response isn't avaliable` : err.response.data || 'unknown error'
+      const message = err.response && err.response.statusText ? err.response.statusText : 'unknown error'
       updateResponse({
         success: false,
         message
@@ -55,7 +54,6 @@ export default function Form({className = ''}) {
   }
 
   const updateAmount = (value) => {
-    console.log(value, isMaxAmountIncreased)
     setAmount(value)
     if (value < 0) return
     if (value > 100) setIsMaxAmointIncreased(true)
