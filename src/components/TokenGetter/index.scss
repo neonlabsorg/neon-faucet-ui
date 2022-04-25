@@ -58,7 +58,7 @@
   &__footer {
     margin-top: 24px;
     display: flex;
-    align-items: center;
+    flex-direction: column;
   }
   &__btn-wrapper {
     width: 50%;
