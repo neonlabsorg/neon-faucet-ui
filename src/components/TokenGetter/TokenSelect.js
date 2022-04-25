@@ -2,6 +2,7 @@ import { useTokensContext } from "@/contexts/tokens";
 import { useEffect, useRef, useState, useMemo } from "react"
 import { Loader } from "../common/Loader";
 import stub from '@/assets/no_symbol.svg'
+import {ReactComponent as DdIcon} from '@/assets/dropdown.svg'
 
 export const TokenSymbol = ({src = '', alt = ''}) => {
   const imgRef = useRef(null)
@@ -90,9 +91,11 @@ export const TokenSelect = ({className = '', tokenName = '', onChoose = () => {}
   }
   const searchList = useMemo(findBySearch, [list, searchString]);
   return <div className={`flex flex-col relative bg-dark-600 ${className}`}>
-    <div className={`flex p-4 cursor-pointer border-b ${opened ? 'border-purple-800' : 'border-transparent'}`}
+    <div className={`flex p-4 cursor-pointer border-b ${opened ? 'border-purple-800' : 'border-transparent'}
+      flex items-center justify-between`}
       onClick={() => setOpened(!opened)}>
-      {tokenName ? tokenName : 'Choose Token'}
+      <span>{tokenName ? tokenName : 'Choose Token'}</span>
+      <DdIcon className={`fill-white ${opened ? 'transform rotate-180' : ''}`}/>
     </div>
     {opened === true ?
       <div>
@@ -102,7 +105,7 @@ export const TokenSelect = ({className = '', tokenName = '', onChoose = () => {}
           placeholder={'Choose or paste token'}
           value={searchString}
           onChange={(e) => setSearchString(e.target.value)}/>
-        <div className={"overflow-y-auto absolute bg-dark-600 top-full z-20"}
+        <div className={"overflow-y-auto absolute w-full bg-dark-600 top-full z-20"}
           style={{
             maxHeight: '50vh'
           }}>

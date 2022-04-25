@@ -3,12 +3,13 @@ import Button from '../common/Button';
 import { Input as NumericalInput } from '../common/NumericalInput'
 import { Loader } from '../common/Loader'
 import { useWeb3React } from '@web3-react/core';
-import axios from 'axios'
 import { TokenSelect } from './TokenSelect';
+import { useHttp } from '../../utils/useHttp';
 
 
 
 export default function Form({className = ''}) {
+  const {post} = useHttp()
   const responseTimeout = useRef(null)
   const [amount, setAmount] = useState(0)
   const [token, setToken] = useState({})
@@ -29,19 +30,16 @@ export default function Form({className = ''}) {
   const [airdropPending, setAirdropPending] = useState(false)
 
   const postAirdrop = () => {
-    const {hostname} = window.location
-    const url = `${hostname}/request_airdrop`
+    const hostname = process.env.REACT_APP_FAUCET_URL ? process.env.REACT_APP_FAUCET_URL : window.location.hostname
+    const url = token.symbol === 'NEON' ? `${hostname}/request_neon`
+      : `${hostname}/request_erc20`
+    const data = token.symbol === 'NEON' ? {
+      amount, wallet: account
+    } : {
+      amount, wallet: account, token_addr: token.address
+    }
     setAirdropPending(true)
-    axios( {
-      url,
-      method: 'POST',
-      headers: {
-        'content-type': 'text/plain',
-      },
-      data: {
-        amount, wallet: account, token: token.address
-      }
-    }).then(resp => {
+    post(url, data).then(resp => {
       const text = resp.statusText
       console.dir(resp)
       updateResponse({

@@ -58,7 +58,7 @@
     box-shadow: 0 0 5px $light-gray !important;
   }
   &--disabled {
-    @apply bg-light-100 dark:bg-dark-500 #{!important};
+    @apply bg-light-100 text-op-15-black dark:bg-dark-500 #{!important};
     pointer-events: none;
   }
 }

@@ -4,6 +4,8 @@ import { useNetworkType } from "../hooks";
 import ERC20_ABI from '../hooks/abi/erc20.json'
 import {NEON_TOKEN_MINT, NEON_TOKEN_MINT_DECIMALS} from 'neon-portal/src/constants'
 import { CHAIN_IDS } from "../connectors";
+import { usePrevious } from "../utils";
+import { useHttp } from "../utils/useHttp";
 
 export const TokensContext = createContext({
   list: [],
@@ -25,6 +27,7 @@ const NEON_TOKEN_MODEL = {
 }
 
 export function TokensProvider({ children = undefined}) {
+  const {get} = useHttp()
   const initialTokenListState = useMemo(() => Object.keys(CHAIN_IDS).map(key => {
     const chainId = CHAIN_IDS[key]
     const model = Object.assign({}, NEON_TOKEN_MODEL)
@@ -33,6 +36,7 @@ export function TokensProvider({ children = undefined}) {
   }), [])
   const {chainId} = useNetworkType()
   const {library, account} = useWeb3React()
+  const prevAccountState = usePrevious()
   const [list, setTokenList] = useState(initialTokenListState)
   const [pending, setPending] = useState(false)
   const [error, setError] = useState('')
@@ -57,16 +61,16 @@ export function TokensProvider({ children = undefined}) {
       const balance = await library.eth.getBalance(account)
       return +(balance / Math.pow(10, token.decimals)).toFixed(4)
     }
-
     const tokenInstance = new library.eth.Contract(ERC20_ABI, token.address)
     const balance = await tokenInstance.methods.balanceOf(account).call()
     return balance / Math.pow(10, token.decimals)
   }
 
-  const requestListBalances = async () => {
+  const requestListBalances = async (list) => {
     for (const item of list) {
       let balance
       try {
+        // console.log(account)
         if (account) {
           balance = await getEthBalance(item)
         } else {
@@ -79,38 +83,36 @@ export function TokensProvider({ children = undefined}) {
     }
   }
 
-  const mergeTokenList = async (source = []) => {
-    const fullList = [...initialTokenListState].concat(source)
+  const mergeTokenList = async (source = [], availableTokens = []) => {
+    const fullList = [...initialTokenListState].concat(source.filter( item => availableTokens.includes(item.address) ))
     const newList = fullList.filter((item) => item.chainId === filteringChainId)
     setTokenList(newList)
-    setTimeout(async () => {
-      await requestListBalances()
-    })
+    await requestListBalances(newList)
   }
-  const updateTokenList = () => {
-    setTokenErrors({})
-    setTokenList([])
-    setBalances({})
+  const updateTokenList = (availableTokens = []) => {
     setPending(true)
-    fetch(`https://raw.githubusercontent.com/neonlabsorg/token-list/main/tokenlist.json`)
-    .then((resp) => {
-      if (resp.ok) {
-        resp.json().then(data => {
-          mergeTokenList(data.tokens)
-        })
-          .catch((err) => setError(err.message))
-      }
+    get(`https://raw.githubusercontent.com/neonlabsorg/token-list/main/tokenlist.json`)
+    .then(({data}) => {
+      mergeTokenList(data.tokens, availableTokens)
     })
     .catch(err => {
       setError(`Failed to fetch neon transfer token list: ${err.message}`)
     }).finally(() => setPending(false))
   }
 
-
   useEffect(() => {
-    updateTokenList()
+    if (!prevAccountState && account && account.length) {
+      get(`${process.env.REACT_APP_FAUCET_URL}/request_erc20_list`)
+      .then(({data}) => {
+        updateTokenList(data)
+      })
+    } else if (!account && prevAccountState && prevAccountState.length) {
+      setTokenErrors({})
+      setTokenList([])
+      setBalances({})
+    }
   // eslint-disable-next-line
-  }, [chainId, account])
+  }, [account])
 
   return <TokensContext.Provider
     value={{list, pending, error, tokenErrors, balances, updateTokenList}}>
