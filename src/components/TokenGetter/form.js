@@ -45,7 +45,7 @@ export default function Form({className = ''}) {
         message: 'Transferred successfully'
       })
     }).catch(err => {
-      const message = err.response && err.response.statusText ? err.response.statusText : 'unknown error'
+      const message = err.response && err.response.statusText ? err.response.statusText : 'Sorry, but server is not responded - it must be too tired :('
       updateResponse({
         success: false,
         message
