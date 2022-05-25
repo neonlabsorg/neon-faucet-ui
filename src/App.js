@@ -4,6 +4,7 @@ import './App.scss';
 import Layout from './components/common/Layout'
 import TokenGetter from './components/TokenGetter';
 import { TokensProvider } from './contexts/tokens';
+import { TechnicalInfo } from './components/TechnicalInfo'
 
 function getLibrary(provider) {
   return new Web3(provider)
@@ -16,6 +17,7 @@ function App() {
         <TokensProvider>
           <TokenGetter/>
         </TokensProvider>
+        <TechnicalInfo />
       </Layout>
     </Web3ReactProvider>
   )
