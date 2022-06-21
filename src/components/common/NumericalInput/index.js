@@ -8,6 +8,7 @@ export const Input = React.memo(function InnerInput({
   onUserInput,
   placeholder,
   className,
+  error,
   ...rest
 }) {
   const enforcer = (nextUserInput) => {
@@ -16,7 +17,9 @@ export const Input = React.memo(function InnerInput({
     }
   }
   return (
-    <input className={`numerical-input ${className}`}
+    <input className={`numerical-input ${className} bg-dark-600
+        ${error ? 'numerical-input--error' : null}
+        ${value > 0 ? 'bg-dark-hover-inputs text-white' : 'text-grey'}`}
       {...rest}
       value={value}
       onChange={event => {

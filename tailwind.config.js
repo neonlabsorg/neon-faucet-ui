@@ -21,7 +21,8 @@ module.exports = {
         '18px': '18px'
       },
       maxWidth: {
-        '420px': '420px'
+        '420px': '420px',
+        '1040px': '1040px'
       },
       maxHeight: {
         '3/4': '75%'
@@ -36,12 +37,15 @@ module.exports = {
         'light-gray-op25': 'rgba(243,246,253, 0.25)',
         'pinky-white': '#F7F8FF',
         'blue-main': "#4355F9",
-        'grey': '#8B88AA',
+        'grey': '#979AAC',
+        'error-red': '#ff0000',
+        'green': '#14F195',
         'light-blue': 'rgba(67, 85, 249, 0.35)',
         'black': '#151515',
         'snowy': 'rgba(216, 236, 255, 0.72)',
         'light-100': '#E2E6EA',
-        'dark-600': '#242424',
+        'dark-600': '#1F1A25',
+        'dark-hover-inputs': '#312D39',
         'dark-500': '#303030',
         'dark-300': '#616163',
         'dark-200': '#5B5B5B',
@@ -51,9 +55,17 @@ module.exports = {
         
       }
     },
+    stroke: {
+      'white': '#fff',
+      'black': '#151515',
+      'green': '#14F195',
+      'red': '#ff0000'
+    },
     fill: {
       'white': '#fff',
-      'black': '#151515'
+      'black': '#151515',
+      'green': '#14F195',
+      'red': '#ff0000'
     }
   },
   variants: {

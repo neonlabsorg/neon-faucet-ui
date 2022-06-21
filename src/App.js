@@ -12,7 +12,7 @@ function getLibrary(provider) {
 function App() {
   return (
     <Web3ReactProvider getLibrary={getLibrary}>
-      <Layout className='flex flex-col w-full px-4 relative'>
+      <Layout className='flex flex-col w-full relative'>
         <TokensProvider>
           <TokenGetter/>
         </TokensProvider>

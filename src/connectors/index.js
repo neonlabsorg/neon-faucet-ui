@@ -4,5 +4,5 @@ export const CHAIN_IDS = {
   'devnet': 245022926
 }
 export const injected = new InjectedConnector({
-  supportedChainIds: [ CHAIN_IDS[process.env.REACT_APP_NETWORK || 'devnet'] ]
+  supportedChainIds: [ CHAIN_IDS['devnet'] ]
 })

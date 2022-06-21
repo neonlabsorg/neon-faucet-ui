@@ -13,7 +13,7 @@ export const TokenSymbol = ({src = '', alt = ''}) => {
     if (failed === true) return stub
     else return src
     // eslint-disable-next-line
-  }, [failed])
+  }, [failed, src])
 
   const handleError = () => {
     setFailed(true)
@@ -48,19 +48,21 @@ const TokenRow = ({
   const { balances } = useTokensContext()
 
   return <div className={`
-      flex px-6 py-2 justify-between dark:text-white hover:bg-gray-600 cursor-pointer
+      flex px-4 py-2 justify-between dark:text-white hover:bg-dark-hover-inputs cursor-pointer
     `}
     onClick={onClick}>
-    <div className='flex items-center w-1/2 pr-4'>
-      <div className='w-1/3 pr-4'>
+    <div className='flex items-center flex-grow pr-4'>
+   
+      <div className="w-6 h-6 mr-4">
         <TokenSymbol src={token.logoURI} alt={token.name} />
       </div>
-      <div className='w-2/3 flex flex-col'>
-        <div className='text-lg mb-2'>{token.symbol}</div>
+      
+      <div className='flex-grow flex flex-col'>
+        <div className='text-base'>{token.symbol}</div>
         <div className='text-sm text-gray-500'>{token.name}</div>
       </div>
     </div>
-    <div className='w-1/2 pl-4 text-sm flex items-center justify-end'>
+    <div className='flex-grow pl-4 text-sm flex items-center justify-end'>
       <div className='flex flex-col items-end'>
         {balances ? JSON.stringify(balances[token.symbol]): null}
       </div>
@@ -73,6 +75,9 @@ export const TokenSelect = ({className = '', tokenName = '', onChoose = () => {}
   const {list, pending, error} = useTokensContext()
   const [opened, setOpened] = useState()
   const [searchString, setSearchString] = useState('')
+  const activeToken = useMemo(() => {
+    return list.find((item) => item.name === tokenName)
+  }, [list, tokenName])
   const findBySearch = () => {
     const arr = []
     if (!searchString.length) return arr
@@ -90,32 +95,38 @@ export const TokenSelect = ({className = '', tokenName = '', onChoose = () => {}
     return arr
   }
   const searchList = useMemo(findBySearch, [list, searchString]);
-  return <div className={`flex flex-col relative bg-dark-600 ${className}`}>
-    <div className={`flex p-4 cursor-pointer border-b ${opened ? 'border-purple-800' : 'border-transparent'}
-      flex items-center justify-between`}
+  return <div className={`flex flex-col relative ${className}`}>
+    <div className={`px-4 py-3 cursor-pointer bg-dark-600 hover:bg-dark-hover-inputs rounded-lg 
+      flex items-center justify-between ${opened ? 'bg-dark-hover-inputs' : null} ${tokenName ? 'bg-dark-hover-inputs' : null}`}
       onClick={() => setOpened(!opened)}>
-      <span>{tokenName ? tokenName : 'Choose Token'}</span>
+      <span className="h-6">{tokenName ? <span className="inline-flex items-center">
+        <div className="w-6 h-6 mr-4"><TokenSymbol src={activeToken.logoURI} alt={activeToken.name} /></div>
+        <span>{activeToken.name}</span>
+      </span> : 'Choose Token'}</span>
       <DdIcon className={`fill-white ${opened ? 'transform rotate-180' : ''}`}/>
     </div>
     {opened === true ?
-      <div>
+      <div className="absolute w-full top-full z-10 mt-2">
         <input
-          className='w-full bg-dark-600 py-6 px-4 border-b border-l border-r border-purple-800'
+          className='w-full bg-dark-600 hover:bg-dark-hover-inputs focus:bg-dark-hover-inputs outline-none rounded-t-lg py-3 px-4 border-b-4 border-black'
           placeholder={'Choose or paste token'}
           value={searchString}
           onChange={(e) => setSearchString(e.target.value)}/>
-        <div className={"overflow-y-auto absolute w-full bg-dark-600 top-full z-20"}
+        <div className={"overflow-y-auto absolute w-full bg-dark-600 rounded-b-lg top-full z-20"}
           style={{
-            maxHeight: '50vh'
+            maxHeight: '240px'
           }}>
         {list && !error && list.length && !pending && !searchString ?
           list.map((token) => {
-            return <TokenRow token={token} key={token.name} onClick={() => {
-              onChoose(token)
-              setOpened(false)
-            }}/>
+            return <TokenRow active={token.name === tokenName}
+              token={token}
+              key={token.name}
+              onClick={() => {
+                onChoose(token)
+                setOpened(false)
+              }}/>
           }) :
-            searchString ?
+            searchString && searchList.length ?
               searchList.map((token) => {
                 return <TokenRow token={token} key={token.symbol} onClick={() => {
                   onChoose(token)
@@ -132,7 +143,7 @@ export const TokenSelect = ({className = '', tokenName = '', onChoose = () => {}
                     <div className='text-lg mb-4'>Error getting token list</div>
                     <div className='text-gray-600'>{error}</div>
                   </div>
-              : list.length ? <>No tokens has been provided</> : null }
+              : !searchList.length ? <div className="p-4 text-gray-500">We didn't find anything</div> : null }
         </div>
       </div>
     : null }

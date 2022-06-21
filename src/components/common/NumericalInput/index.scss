@@ -1,14 +1,7 @@
 .numerical-input {
-  position: relative;
-  font-weight: 500;
-  outline: none;
-  border: none;
-  color: $white;
-  white-space: nowrap;
-  overflow: hidden;
-  background-color: transparent;
-  text-overflow: ellipsis;
-  padding: 0px;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  @apply px-4 rounded-lg hover:bg-dark-hover-inputs border-2 border-transparent focus:border-green outline-none;
   -webkit-appearance: textfield;
   ::-webkit-search-decoration {
     -webkit-appearance: none;
@@ -21,6 +14,6 @@
     -webkit-appearance: none;
   }
   &--error {
-    @apply text-red-400;
+    @apply text-red-400 focus:border-red-500;
   }
 }

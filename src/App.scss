@@ -1,9 +1,8 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@600&display=swap');
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-html {
-  font-falimy: 'Inter', 'Ubuntu', 'Helvetica', sans-serif;
+html, body {
+  font-family: 'Inter', 'Ubuntu', 'Helvetica', sans-serif !important;
 }
 $breakpoints: (xSmall: 500px, small: 720px, medium: 960px, large: 1280px);
 $dark_background: #0E0E0E;
@@ -20,7 +19,7 @@ $cube_side: 75px;
 $plate_width: 1120px;
 $dark: #0E0E0E;
 $white: #fff;
-$grey-purple: #8286AB;
+$grey-purple: #979AAC;
 $red: #FD4040;
 $blue: #4355F9;
 $purple: #CE3A8B;

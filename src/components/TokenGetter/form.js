@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react';
+import { useState } from 'react';
 import Button from '../common/Button';
 import { Input as NumericalInput } from '../common/NumericalInput'
 import { Loader } from '../common/Loader'
@@ -8,24 +8,13 @@ import { useHttp } from '../../utils/useHttp';
 
 
 
-export default function Form({className = ''}) {
+export default function Form({className = '', blocked = false, onResponse = () => {}}) {
   const {post} = useHttp()
-  const responseTimeout = useRef(null)
+  
   const [amount, setAmount] = useState(0)
   const [token, setToken] = useState({})
   const [isMaxAmountIncreased, setIsMaxAmointIncreased] = useState(false)
   const {account} = useWeb3React()
-  const [response, setResponse] = useState({
-    success: true,
-    message: ''
-  })
-
-  const updateResponse = (resp) => {
-    setResponse(resp)
-    responseTimeout.current = setTimeout(() => {
-      setResponse({success: true, message: ''})
-    }, 60000)
-  }
 
   const [airdropPending, setAirdropPending] = useState(false)
 
@@ -40,15 +29,15 @@ export default function Form({className = ''}) {
     }
     setAirdropPending(true)
     post(url, data).then(() => {
-      updateResponse({
+      onResponse({
         success: true,
-        message: 'Transferred successfully'
+        details: 'Transferred successfully'
       })
     }).catch(err => {
-      const message = err.response && err.response.statusText ? err.response.statusText : 'Sorry, but server is not responded - it must be too tired :('
-      updateResponse({
+      const details = err.response && err.response.statusText ? err.response.statusText : 'Server is not responsing'
+      onResponse({
         success: false,
-        message
+        details
       })
     }).finally(() => setAirdropPending(false))
   }
@@ -60,14 +49,14 @@ export default function Form({className = ''}) {
     else setIsMaxAmointIncreased(false)
   }
 
-  return <div className={`${className} tg-form`}>
-    <h1 className='text-xl mb-6'>Token dropper for test environment</h1>
+  return <div className={`${className} tg-form relative`}>
+    <h1 className='text-xl font-bold max-w-xs mb-8 leading-tight'>Choose token type and the amount to be airdroped.</h1>
     <div className='tg-form__amount'>
       <TokenSelect className='w-full mb-6' tokenName={token.name} onChoose={setToken}/>
       <NumericalInput
-        className="tg-form__input"
+        className={`w-full`}
         value={amount}
-        error={isMaxAmountIncreased ? 'true' : 'false'}
+        error={isMaxAmountIncreased}
         onUserInput={val => {
           updateAmount(+val)
         }}
@@ -75,18 +64,17 @@ export default function Form({className = ''}) {
     </div>
     <div className='tg-form__footer'>
         <Button className='w-full'
-          disabled={isMaxAmountIncreased || amount === 0 || (response && response.message) || airdropPending === true || (token.symbol !== 'NEON' && !token.address)}
-          onClick={() => postAirdrop()}>{'test airdrop'}</Button>
-      { airdropPending ? <Loader className='my-4' /> : null }
+          disabled={isMaxAmountIncreased || amount === 0 || blocked === true|| airdropPending === true || (token.symbol !== 'NEON' && !token.address)}
+          onClick={() => postAirdrop()}>
+          <div className='flex items-center'>
+            { airdropPending ? <Loader className='mr-4 stroke-green fill-green h-6 w-6' /> : null }
+            <span>{'send test tokens'}</span>
+          </div>
+        </Button>
+      
     </div>
-    {isMaxAmountIncreased ? <div className={`tg-form__res-text mt-4 text-center`}>
+    {isMaxAmountIncreased ? <div className={`absolute top-full mt-4 text-sm`}>
       {'Maximum limit for one airdrop is 100 tokens per minute'}
     </div> : null}
-    {response.message && response.message.length ? 
-    <div className='tg-form__response'>
-      <div className={`tg-form__res-text ${!response.success ? 'tg-form__res-text--error' : ''}`}>{response.message}</div>
-      <div className='tg-form__res-lock'>{"Next request will be unlock after one minute expiration for a security reasons"}</div>
-    </div>
-    : null}
   </div>
 }
