@@ -74,27 +74,9 @@ const TokenRow = ({
 export const TokenSelect = ({className = '', tokenName = '', onChoose = () => {}}) => {
   const {list, pending, error} = useTokensContext()
   const [opened, setOpened] = useState()
-  const [searchString, setSearchString] = useState('')
   const activeToken = useMemo(() => {
     return list.find((item) => item.name === tokenName)
   }, [list, tokenName])
-  const findBySearch = () => {
-    const arr = []
-    if (!searchString.length) return arr
-    const fs = searchString.toLowerCase()
-    list.forEach(item => {
-      if (
-        item.name.toLowerCase().includes(fs) ||
-        item.symbol.toLowerCase().includes(fs) ||
-        item.address.toLowerCase() === fs ||
-        item.address_spl.toLowerCase() === fs
-        ) {
-        arr.push(item)
-      }
-    })
-    return arr
-  }
-  const searchList = useMemo(findBySearch, [list, searchString]);
   return <div className={`flex flex-col relative ${className}`}>
     <div className={`px-4 py-3 cursor-pointer bg-dark-600 hover:bg-dark-hover-inputs rounded-lg 
       flex items-center justify-between ${opened ? 'bg-dark-hover-inputs' : null} ${tokenName ? 'bg-dark-hover-inputs' : null}`}
@@ -107,16 +89,11 @@ export const TokenSelect = ({className = '', tokenName = '', onChoose = () => {}
     </div>
     {opened === true ?
       <div className="absolute w-full top-full z-10 mt-2">
-        <input
-          className='w-full bg-dark-600 hover:bg-dark-hover-inputs focus:bg-dark-hover-inputs outline-none rounded-t-lg py-3 px-4 border-b-4 border-black'
-          placeholder={'Choose or paste token'}
-          value={searchString}
-          onChange={(e) => setSearchString(e.target.value)}/>
-        <div className={"overflow-y-auto absolute w-full bg-dark-600 rounded-b-lg top-full z-20"}
+        <div className={"overflow-y-auto absolute w-full bg-dark-600 rounded-b-lg top-full rounded-t-lg z-20"}
           style={{
             maxHeight: '240px'
           }}>
-        {list && !error && list.length && !pending && !searchString ?
+        {list && !error && list.length && !pending ?
           list.map((token) => {
             return <TokenRow active={token.name === tokenName}
               token={token}
@@ -126,24 +103,17 @@ export const TokenSelect = ({className = '', tokenName = '', onChoose = () => {}
                 setOpened(false)
               }}/>
           }) :
-            searchString && searchList.length ?
-              searchList.map((token) => {
-                return <TokenRow token={token} key={token.symbol} onClick={() => {
-                  onChoose(token)
-                  setOpened(false)
-                }}/>
-              }) :
-              pending ?
-                <div className='p-4 flex items-center'>
-                  <Loader/>
-                  <span className='ml-4 text-lg'>Updating token list, please wait...</span>
-                </div> :
-                error ?
-                  <div className='flex p-4 flex-col'>
-                    <div className='text-lg mb-4'>Error getting token list</div>
-                    <div className='text-gray-600'>{error}</div>
-                  </div>
-              : !searchList.length ? <div className="p-4 text-gray-500">We didn't find anything</div> : null }
+            pending ?
+              <div className='p-4 flex items-center'>
+                <Loader/>
+                <span className='ml-4 text-lg'>Updating token list, please wait...</span>
+              </div> :
+              error ?
+                <div className='flex p-4 flex-col'>
+                  <div className='text-lg mb-4'>Error getting token list</div>
+                  <div className='text-gray-600'>{error}</div>
+                </div>
+            : null }
         </div>
       </div>
     : null }

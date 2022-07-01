@@ -3,6 +3,8 @@ export const CHAIN_IDS = {
   'testnet': 245022940,
   'devnet': 245022926
 }
-export const injected = new InjectedConnector({
-  supportedChainIds: [ CHAIN_IDS['devnet'] ]
-})
+const supportedChainIds = []
+
+Object.keys(CHAIN_IDS).forEach(key => supportedChainIds.push( CHAIN_IDS[key] ))
+console.log(supportedChainIds)
+export const injected = new InjectedConnector({ supportedChainIds })

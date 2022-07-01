@@ -1,8 +1,17 @@
 import {ReactComponent as Logo} from '@/assets/logo.svg'
+import { useWeb3React } from '@web3-react/core'
 
 export const Header = () => {
+  const { deactivate, active } = useWeb3React()
+  async function disconnect() {
+    try {
+      deactivate()
+    } catch (ex) {
+      console.log(ex)
+    }
+  }
   return <div className="w-full p-6 flex justify-between items-center relative z-10">
-    <div>
+    <div onClick={disconnect} className={active ? 'cursor-pointer' : null}>
       <Logo/>
     </div>
     <div className='flex items-center text-white'>

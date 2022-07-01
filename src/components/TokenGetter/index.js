@@ -5,21 +5,23 @@ import { injected } from '../../connectors';
 import Button from '../common/Button';
 import { ReactComponent as Warning } from '@/assets/warning.svg'
 import { Notificator } from './notificator';
-
+export const REQUEST_LIMIT_SEC = 15
 export default function TokenGetter() {
+  /* { account, error, activate, deactivate, active } */
   const { activate, error, active } = useWeb3React()
-  const [response, setResponse] = useState({
-    success: true,
-    details: 'Transferred successfully'
-  })
+  const [response, setResponse] = useState(null)
+  const [waiting, setWaiting] = useState(false)
   const responseTimeout = useRef(null)
   const updateResponse = (resp) => {
     setResponse(resp)
+    setWaiting(true)
     responseTimeout.current = setTimeout(() => {
-      setResponse({})
-    }, 60000)
+      setResponse(null)
+      setWaiting(false)
+    }, REQUEST_LIMIT_SEC * 1000)
   }
-  const connect = async () => {
+  
+  async function connect() {
     try {
       await activate(injected)
     } catch (ex) {
@@ -27,10 +29,10 @@ export default function TokenGetter() {
     }
   }
   const renderByAccountState = () => {
-    if (active) return <Form blocked={response.details && response.details.length > 0} onResponse={updateResponse}/>
+    if (active) return <Form waiting={waiting} response={response} blocked={response !== null} onResponse={updateResponse}/>
     else if (error) {
       if (error instanceof UnsupportedChainIdError) {
-        return <div className='flex flex-col'>
+        return <div className='flex flex-col px-6'>
           <div className='flex items-center'>
             <div className='w-12 h-12 flex items-center justify-center mr-4'>
               <Warning/>
@@ -40,7 +42,7 @@ export default function TokenGetter() {
               <div>Please select the appropriate Ethereum network and try connecting the wallet again</div>
             </div>
           </div>
-          <div className='pl-16 pt-6'>
+          <div className='pl-16 pt-6 flex flex-wrap'>
             <Button className='mr-4' layoutTheme='dark' onClick={connect}>Connect Wallet</Button>
             <Button transparent layoutTheme='dark' onClick={() => window.location.reload()}>Reload page</Button>
           </div>
@@ -55,11 +57,11 @@ export default function TokenGetter() {
         </div>
       }
     } else {
-      return <div className='flex flex-col items-start'>
-        <div className='text-2xl font-bold max-w-xl mb-12'>{`Faucet is Neon's official service that helps you get test NEON or other ERC-20 tokens on devnet for testing applications.`}</div>
-        <div className='flex items-center'>
-          <div className='flex flex-col mr-16'>
-            <div className='text-xl font-bold'>{`Let's start:`}</div>
+      return <div className='flex flex-col px-6 items-start'>
+        <div className='text-2xl font-bold max-w-xl mb-12'>{`Neon's Faucet service will help you get NEON test tokens or other ERC-20 test tokens to be used for testing applications on devnet.`}</div>
+        <div className='flex flex-wrap items-center'>
+          <div className='flex flex-col mr-16 mb-4 sm:mb-0'>
+            <div className='text-xl font-bold'>{`Let's get started:`}</div>
             <div>{`Connect your wallet`}</div>
           </div>
           <Button layoutTheme='dark' onClick={connect}>Connect Wallet</Button>
@@ -74,8 +76,8 @@ export default function TokenGetter() {
           {renderByAccountState()}
         </div>
       </div>
-      {response && response.details ? <div className='absolute bottom-0 left-0 right-0'>
-        <Notificator response={response} onClose={() => setResponse({})}/>
+      {response?.details ? <div className='absolute bottom-0 left-0 right-0'>
+        <Notificator response={response} onClose={() => setResponse((prevState) => ({ success: prevState.success }) )}/>
       </div> : null}
     </>
   )

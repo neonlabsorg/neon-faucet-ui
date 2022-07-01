@@ -5,12 +5,12 @@ import { Loader } from '../common/Loader'
 import { useWeb3React } from '@web3-react/core';
 import { TokenSelect } from './TokenSelect';
 import { useHttp } from '../../utils/useHttp';
+import { CircleTimer } from '../common/CircleTimer';
+import { REQUEST_LIMIT_SEC } from '.';
 
 
-
-export default function Form({className = '', blocked = false, onResponse = () => {}}) {
+export default function Form({className = '', blocked = false, response = null, onResponse = () => {}, waiting = false}) {
   const {post} = useHttp()
-  
   const [amount, setAmount] = useState(0)
   const [token, setToken] = useState({})
   const [isMaxAmountIncreased, setIsMaxAmointIncreased] = useState(false)
@@ -52,9 +52,9 @@ export default function Form({className = '', blocked = false, onResponse = () =
   return <div className={`${className} tg-form relative`}>
     <h1 className='text-xl font-bold max-w-xs mb-8 leading-tight'>Choose token type and the amount to be airdroped.</h1>
     <div className='tg-form__amount'>
-      <TokenSelect className='w-full mb-6' tokenName={token.name} onChoose={setToken}/>
+      <TokenSelect className='w-full mb-4' tokenName={token.name} onChoose={setToken}/>
       <NumericalInput
-        className={`w-full`}
+        className={`w-full mb-4`}
         value={amount}
         error={isMaxAmountIncreased}
         onUserInput={val => {
@@ -62,16 +62,17 @@ export default function Form({className = '', blocked = false, onResponse = () =
         }}
       />
     </div>
-    <div className='tg-form__footer'>
-        <Button className='w-full'
-          disabled={isMaxAmountIncreased || amount === 0 || blocked === true|| airdropPending === true || (token.symbol !== 'NEON' && !token.address)}
-          onClick={() => postAirdrop()}>
-          <div className='flex items-center'>
-            { airdropPending ? <Loader className='mr-4 stroke-green fill-green h-6 w-6' /> : null }
-            <span>{'send test tokens'}</span>
-          </div>
-        </Button>
-      
+    <div className='flex flex-col'>
+      <Button className='w-full'
+        disabled={isMaxAmountIncreased || amount === 0 || blocked === true|| airdropPending === true || (token.symbol !== 'NEON' && !token.address)}
+        onClick={() => postAirdrop()}>
+        <div className='flex items-center'>
+          { airdropPending ? 
+            <Loader className='mr-4 stroke-green fill-green h-6 w-6' /> : 
+            waiting ? <CircleTimer className='mr-4' isError={response?.success === false} size={22} duration={REQUEST_LIMIT_SEC} playing={waiting}/> : null }
+          <span>{'send test tokens'}</span>
+        </div>
+      </Button>
     </div>
     {isMaxAmountIncreased ? <div className={`absolute top-full mt-4 text-sm`}>
       {'Maximum limit for one airdrop is 100 tokens per minute'}
