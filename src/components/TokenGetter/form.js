@@ -7,7 +7,7 @@ import { TokenSelect } from './TokenSelect';
 import { useHttp } from '../../utils/useHttp';
 import { CircleTimer } from '../common/CircleTimer';
 import { REQUEST_LIMIT_SEC } from '.';
-
+import { FAUCET_URL } from '../../config'
 
 export default function Form({className = '', blocked = false, response = null, onResponse = () => {}, waiting = false}) {
   const {post} = useHttp()
@@ -19,9 +19,10 @@ export default function Form({className = '', blocked = false, response = null, 
   const [airdropPending, setAirdropPending] = useState(false)
 
   const postAirdrop = () => {
-    const hostname = process.env.REACT_APP_FAUCET_URL ? process.env.REACT_APP_FAUCET_URL : window.location.hostname
-    const url = token.symbol === 'NEON' ? `${hostname}/request_neon`
-      : `${hostname}/request_erc20`
+    const url = token.symbol === 'NEON'
+      ? `${FAUCET_URL}/request_neon`
+      : `${FAUCET_URL}/request_erc20`
+
     const data = token.symbol === 'NEON' ? {
       amount, wallet: account
     } : {

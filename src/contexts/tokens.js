@@ -6,6 +6,7 @@ import {NEON_TOKEN_MINT, NEON_TOKEN_MINT_DECIMALS} from 'neon-portal/src/constan
 import { CHAIN_IDS } from "../connectors";
 import { usePrevious } from "../utils";
 import { useHttp } from "../utils/useHttp";
+import { FAUCET_URL } from '../config'
 
 export const TokensContext = createContext({
   list: [],
@@ -102,7 +103,7 @@ export function TokensProvider({ children = undefined}) {
 
   useEffect(() => {
     if (!prevAccountState && account && account.length) {
-      get(`${process.env.REACT_APP_FAUCET_URL}/request_erc20_list`)
+      get(`${FAUCET_URL}/request_erc20_list`)
       .then(({data}) => {
         updateTokenList(data)
       })
