@@ -1,5 +1,5 @@
-import axios from 'axios'
-import { stringify } from 'qs'
+import axios from "axios"
+import { stringify } from "qs"
 
 export const useHttp = () => {
   const get = (url: string, queryObject?: any) => {
@@ -8,12 +8,12 @@ export const useHttp = () => {
   const post = (url, body) => {
     return axios({
       url,
-      method: 'POST',
+      method: "POST",
       headers: {
-        'content-type': 'text/plain',
+        "content-type": "text/plain",
       },
-      data: body
+      data: body,
     })
   }
-  return {get, post}
+  return { get, post }
 }

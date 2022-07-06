@@ -1,10 +1,10 @@
-import { useWeb3React, UnsupportedChainIdError } from '@web3-react/core'
-import { useState, useRef } from 'react';
-import Form from './form'
-import { injected } from '../../connectors';
-import Button from '../common/Button';
-import { ReactComponent as Warning } from '@/assets/warning.svg'
-import { Notificator } from './notificator';
+import { useWeb3React, UnsupportedChainIdError } from "@web3-react/core"
+import { useState, useRef } from "react"
+import Form from "./form"
+import { injected } from "../../connectors"
+import Button from "../common/Button"
+import { ReactComponent as Warning } from "@/assets/warning.svg"
+import { Notificator } from "./notificator"
 export const REQUEST_LIMIT_SEC = 15
 export default function TokenGetter() {
   /* { account, error, activate, deactivate, active } */
@@ -20,7 +20,7 @@ export default function TokenGetter() {
       setWaiting(false)
     }, REQUEST_LIMIT_SEC * 1000)
   }
-  
+
   async function connect() {
     try {
       await activate(injected)
@@ -29,57 +29,88 @@ export default function TokenGetter() {
     }
   }
   const renderByAccountState = () => {
-    if (active) return <Form waiting={waiting} response={response} blocked={response !== null} onResponse={updateResponse}/>
+    if (active)
+      return (
+        <Form
+          waiting={waiting}
+          response={response}
+          blocked={response !== null}
+          onResponse={updateResponse}
+        />
+      )
     else if (error) {
       if (error instanceof UnsupportedChainIdError) {
-        return <div className='flex flex-col px-6'>
-          <div className='flex items-center'>
-            <div className='w-12 h-12 flex items-center justify-center mr-4'>
-              <Warning/>
+        return (
+          <div className="flex flex-col px-6">
+            <div className="flex items-center">
+              <div className="w-12 h-12 flex items-center justify-center mr-4">
+                <Warning />
+              </div>
+              <div className="flex flex-col">
+                <div className="text-xl font-bold mb-1">
+                  Your wallet not connected to NEON Devnet or Testnet
+                </div>
+                <div>
+                  Please select the appropriate Ethereum network and try connecting the wallet again
+                </div>
+              </div>
             </div>
-            <div className='flex flex-col'>
-              <div className='text-xl font-bold mb-1'>Your wallet not connected to NEON Devnet or Testnet</div>
-              <div>Please select the appropriate Ethereum network and try connecting the wallet again</div>
+            <div className="pl-16 pt-6 flex flex-wrap">
+              <Button className="mr-4" layoutTheme="dark" onClick={connect}>
+                Connect Wallet
+              </Button>
+              <Button transparent layoutTheme="dark" onClick={() => window.location.reload()}>
+                Reload page
+              </Button>
             </div>
           </div>
-          <div className='pl-16 pt-6 flex flex-wrap'>
-            <Button className='mr-4' layoutTheme='dark' onClick={connect}>Connect Wallet</Button>
-            <Button transparent layoutTheme='dark' onClick={() => window.location.reload()}>Reload page</Button>
-          </div>
-        </div>
+        )
       } else {
-        return <div className='flex items-center'>
-          <div className='w-12 h-12 flex items-center justify-center mr-6'>
-            <Warning/>
+        return (
+          <div className="flex items-center">
+            <div className="w-12 h-12 flex items-center justify-center mr-6">
+              <Warning />
+            </div>
+            <div className="mr-6 text-xl font-bold">
+              Check is your metamask wallet
+              <br /> installed on Chrome as extension.
+            </div>
+            <Button transparent layoutTheme="dark" onClick={() => window.location.reload()}>
+              Reload page
+            </Button>
           </div>
-          <div className='mr-6 text-xl font-bold'>Check is your metamask wallet<br/> installed on Chrome as extension.</div>
-          <Button transparent layoutTheme='dark' onClick={() => window.location.reload()}>Reload page</Button>
-        </div>
+        )
       }
     } else {
-      return <div className='flex flex-col px-6 items-start'>
-        <div className='text-2xl font-bold max-w-xl mb-12'>{`Neon's Faucet service will help you get NEON test tokens or other ERC-20 test tokens to be used for testing applications on devnet.`}</div>
-        <div className='flex flex-wrap items-center'>
-          <div className='flex flex-col mr-16 mb-4 sm:mb-0'>
-            <div className='text-xl font-bold'>{`Let's get started:`}</div>
-            <div>{`Connect your wallet`}</div>
+      return (
+        <div className="flex flex-col px-6 items-start">
+          <div className="text-2xl font-bold max-w-xl mb-12">{`Neon's Faucet service will help you get NEON test tokens or other ERC-20 test tokens to be used for testing applications on devnet.`}</div>
+          <div className="flex flex-wrap items-center">
+            <div className="flex flex-col mr-16 mb-4 sm:mb-0">
+              <div className="text-xl font-bold">{`Let's get started:`}</div>
+              <div>{`Connect your wallet`}</div>
+            </div>
+            <Button layoutTheme="dark" onClick={connect}>
+              Connect Wallet
+            </Button>
           </div>
-          <Button layoutTheme='dark' onClick={connect}>Connect Wallet</Button>
         </div>
-      </div>
+      )
     }
   }
   return (
     <>
       <div className={`w-full flex-grow flex flex-col justify-center`}>
-        <div className='w-full max-w-1040px mx-auto'>
-          {renderByAccountState()}
-        </div>
+        <div className="w-full max-w-1040px mx-auto">{renderByAccountState()}</div>
       </div>
-      {response?.details ? <div className='absolute bottom-0 left-0 right-0'>
-        <Notificator response={response} onClose={() => setResponse((prevState) => ({ success: prevState.success }) )}/>
-      </div> : null}
+      {response?.details ? (
+        <div className="absolute bottom-0 left-0 right-0">
+          <Notificator
+            response={response}
+            onClose={() => setResponse((prevState) => ({ success: prevState.success }))}
+          />
+        </div>
+      ) : null}
     </>
   )
 }
-

@@ -1,11 +1,11 @@
-import { useCallback, useState, useRef, useEffect } from 'react';
+import { useCallback, useState, useRef, useEffect } from "react"
 
-export function escapeRegExp(string = '') {
-  return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+export function escapeRegExp(string = "") {
+  return string.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")
 }
 
-export function shortenAddress(address = '', chars = 4) {
-  if (!address.length) return ''
+export function shortenAddress(address = "", chars = 4) {
+  if (!address.length) return ""
   return `${address.substring(0, chars + 2)}...${address.substring(42 - chars)}`
 }
 
@@ -17,31 +17,31 @@ export function usePrevious(value?: any) {
   return ref.current
 }
 
-export function useLocalStorageState(key = '', defaultState = '') {
+export function useLocalStorageState(key = "", defaultState = "") {
   const [state, setState] = useState(() => {
     // NOTE: Not sure if this is ok
-    const storedState = localStorage.getItem(key);
+    const storedState = localStorage.getItem(key)
     if (storedState) {
-      return JSON.parse(storedState);
+      return JSON.parse(storedState)
     }
-    return defaultState;
-  });
+    return defaultState
+  })
 
   const setLocalStorageState = useCallback(
-    newState => {
-      const changed = state !== newState;
+    (newState) => {
+      const changed = state !== newState
       if (!changed) {
-        return;
+        return
       }
-      setState(newState);
+      setState(newState)
       if (newState === null) {
-        localStorage.removeItem(key);
+        localStorage.removeItem(key)
       } else {
-        localStorage.setItem(key, JSON.stringify(newState));
+        localStorage.setItem(key, JSON.stringify(newState))
       }
     },
     [state, key],
-  );
+  )
 
-  return [state, setLocalStorageState];
+  return [state, setLocalStorageState]
 }
