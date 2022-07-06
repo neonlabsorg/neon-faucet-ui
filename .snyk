@@ -1,0 +1,14 @@
+version: v1.25.0
+ignore:
+  SNYK-JS-WEB3-174533:
+    - '*':
+        created: 2022-07-06T21:19:36.878Z
+  SNYK-JS-GOT-2932019:
+    - '*':
+        created: 2022-07-06T21:19:36.878Z
+  SNYK-JS-POSTCSS-1255640:
+    - '*':
+        created: 2022-07-06T21:19:36.878Z
+  SNYK-JS-WS-1296835:
+    - '*':
+        created: 2022-07-06T21:19:36.878Z
