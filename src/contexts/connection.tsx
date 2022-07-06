@@ -5,9 +5,11 @@ import {
 import { createContext, useMemo, useEffect, useContext } from 'react';
 import { useLocalStorageState } from '../utils';
 
-const DEFAULT = clusterApiUrl(process.env.REACT_APP_NETWORK || 'mainnet-beta');
+type Cluster = 'devnet' | 'testnet' | 'mainnet-beta'
+
+const DEFAULT = clusterApiUrl(process.env.REACT_APP_NETWORK as Cluster || 'mainnet-beta');
 const DEFAULT_SLIPPAGE = 0.25;
-const ConnectionContext = createContext({
+const ConnectionContext = createContext<any>({
   endpoint: DEFAULT,
   setEndpoint: () => {},
   slippage: DEFAULT_SLIPPAGE,

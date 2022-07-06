@@ -1,8 +1,8 @@
-import { useTokensContext } from "@/contexts/tokens";
+import { useTokensContext } from "../../contexts/tokens";
 import { useEffect, useRef, useState, useMemo } from "react"
 import { Loader } from "../common/Loader";
-import stub from '@/assets/no_symbol.svg'
-import {ReactComponent as DdIcon} from '@/assets/dropdown.svg'
+import stub from '../../assets/no_symbol.svg'
+import {ReactComponent as DdIcon} from '../../assets/dropdown.svg'
 
 export const TokenSymbol = ({src = '', alt = ''}) => {
   const imgRef = useRef(null)
@@ -44,7 +44,7 @@ const TokenRow = ({
     name: ''
   },
   onClick = () => {}
-}) => {
+}: any) => {
   const { balances } = useTokensContext()
 
   return <div className={`
@@ -71,9 +71,9 @@ const TokenRow = ({
 }
 
 
-export const TokenSelect = ({className = '', tokenName = '', onChoose = () => {}}) => {
+export const TokenSelect = ({className = '', tokenName = '', onChoose = () => {}}: any) => {
   const {list, pending, error} = useTokensContext()
-  const [opened, setOpened] = useState()
+  const [opened, setOpened] = useState<any>()
   const activeToken = useMemo(() => {
     return list.find((item) => item.name === tokenName)
   }, [list, tokenName])

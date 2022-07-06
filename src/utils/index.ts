@@ -9,7 +9,7 @@ export function shortenAddress(address = '', chars = 4) {
   return `${address.substring(0, chars + 2)}...${address.substring(42 - chars)}`
 }
 
-export function usePrevious(value) {
+export function usePrevious(value?: any) {
   const ref = useRef()
   useEffect(() => {
     ref.current = value

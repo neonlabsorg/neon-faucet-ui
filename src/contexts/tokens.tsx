@@ -107,6 +107,7 @@ export function TokensProvider({ children = undefined}) {
       .then(({data}) => {
         updateTokenList(data)
       })
+    // @ts-ignore
     } else if (!account && prevAccountState && prevAccountState.length) {
       setTokenErrors({})
       setTokenList([])
@@ -116,10 +117,11 @@ export function TokensProvider({ children = undefined}) {
   }, [account])
 
   return <TokensContext.Provider
+    // @ts-ignore
     value={{list, pending, error, tokenErrors, balances, updateTokenList}}>
     {children}
   </TokensContext.Provider>
 }
-export function useTokensContext() {
+export function useTokensContext(): any {
   return useContext(TokensContext)
 }

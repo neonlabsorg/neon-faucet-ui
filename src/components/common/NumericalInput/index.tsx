@@ -1,9 +1,9 @@
 import React from 'react'
-import { escapeRegExp } from '@/utils'
+import { escapeRegExp } from '../../../utils'
 
 const inputRegex = RegExp(`^\\d*(?:\\\\[.])?\\d*$`) // match escaped "." characters via in a non-capturing group
 
-export const Input = React.memo(function InnerInput({
+export const Input = React.memo<any>(function InnerInput({
   value,
   onUserInput,
   placeholder,

@@ -9,10 +9,10 @@ import { CircleTimer } from '../common/CircleTimer';
 import { REQUEST_LIMIT_SEC } from '.';
 import { FAUCET_URL } from '../../config'
 
-export default function Form({className = '', blocked = false, response = null, onResponse = () => {}, waiting = false}) {
+export default function Form({className = '', blocked = false, response = null, onResponse = () => {}, waiting = false}: any) {
   const {post} = useHttp()
   const [amount, setAmount] = useState(0)
-  const [token, setToken] = useState({})
+  const [token, setToken] = useState<any>({})
   const [isMaxAmountIncreased, setIsMaxAmointIncreased] = useState(false)
   const {account} = useWeb3React()
 
