@@ -1,10 +1,12 @@
 import axios from "axios"
-import { stringify } from "qs"
 
 export const useHttp = () => {
-  const get = (url: string, queryObject?: any) => {
-    return axios.get(`${url}?${stringify(queryObject)}`)
+  const get = (url: string, params?: any) => {
+    return axios.get(url, {
+      params,
+    })
   }
+
   const post = (url, body) => {
     return axios({
       url,
@@ -15,5 +17,6 @@ export const useHttp = () => {
       data: body,
     })
   }
+
   return { get, post }
 }
