@@ -45,6 +45,7 @@ const TokenRow = ({
     name: "",
   },
   onClick = () => {},
+  active,
 }: any) => {
   const { balances } = useTokensContext()
 
@@ -61,7 +62,7 @@ const TokenRow = ({
         </div>
 
         <div className="flex-grow flex flex-col">
-          <div className="text-base">{token.symbol}</div>
+          <div className={active ? "text-green" : "text-base"}>{token.symbol}</div>
           <div className="text-sm text-gray-500">{token.name}</div>
         </div>
       </div>
