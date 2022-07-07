@@ -11,7 +11,7 @@
   &__title {
     font-size: 56px;
     font-weight: 500;
-    @include media('>=xSmall', '<medium') {
+    @include media(">=xSmall", "<medium") {
       font-size: 32px;
     }
     margin-bottom: 40px;
@@ -20,7 +20,7 @@
     font-weight: 500;
     font-size: 18px;
     margin-bottom: 24px;
-    @include media('>=xSmall', '<medium') {
+    @include media(">=xSmall", "<medium") {
       font-size: 14px;
     }
   }
@@ -81,4 +81,8 @@
       color: $red;
     }
   }
+}
+
+.margin-header {
+  margin-top: -4.5rem;
 }

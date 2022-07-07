@@ -101,7 +101,7 @@ export default function TokenGetter() {
   }
   return (
     <>
-      <div className={`w-full flex-grow flex flex-col justify-center`}>
+      <div className={`w-full flex-grow flex flex-col justify-center margin-header`}>
         <div className="w-full max-w-1040px mx-auto">{renderByAccountState()}</div>
       </div>
       {response?.details ? (
