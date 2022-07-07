@@ -6,8 +6,7 @@ import { useWeb3React } from "@web3-react/core"
 import { TokenSelect } from "./TokenSelect"
 import { useHttp } from "../../utils/useHttp"
 import { CircleTimer } from "../common/CircleTimer"
-import { REQUEST_LIMIT_SEC } from "."
-import { FAUCET_URL } from "../../config"
+import { FAUCET_URL, REQUEST_LIMIT_SEC } from "../../config"
 
 export default function Form({
   className = "",

@@ -5,7 +5,8 @@ import { injected } from "../../connectors"
 import Button from "../common/Button"
 import { ReactComponent as Warning } from "@/assets/warning.svg"
 import { Notificator } from "./notificator"
-export const REQUEST_LIMIT_SEC = 15
+import { REQUEST_LIMIT_SEC } from "../../config"
+
 export default function TokenGetter() {
   /* { account, error, activate, deactivate, active } */
   const { activate, error, active } = useWeb3React()
