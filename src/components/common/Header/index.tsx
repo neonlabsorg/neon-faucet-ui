@@ -23,7 +23,7 @@ export const Header = () => {
           NeonPass
         </a>
         <a
-          href="https://github.com/neonlabsorg/neon-support/issues"
+          href="https://docs.neon-labs.org/docs/developing/utilities/faucet"
           rel="noopener noreferrer"
           target="_blank"
           className="ml-6"
