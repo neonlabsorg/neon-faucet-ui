@@ -49,7 +49,7 @@ export default function TokenGetter() {
               </div>
               <div className="flex flex-col">
                 <div className="text-xl font-bold mb-1">
-                  Your wallet not connected to NEON Devnet or Testnet
+                  Your wallet not connected to NEON Devnet
                 </div>
                 <div>
                   Please select the appropriate Ethereum network and try connecting the wallet again
