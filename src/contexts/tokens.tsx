@@ -94,7 +94,7 @@ export function TokensProvider({ children = undefined }) {
   }
   const updateTokenList = (availableTokens = []) => {
     setPending(true)
-    get(`https://raw.githubusercontent.com/neonlabsorg/token-list/v0.1.0/tokenlist.json`)
+    get(`https://raw.githubusercontent.com/neonlabsorg/token-list/main/tokenlist.json`)
       .then(({ data }) => {
         mergeTokenList(data.tokens, availableTokens)
       })
