@@ -38,8 +38,7 @@ export function TokensProvider({ children = undefined }) {
         model.chainId = chainId
         return model
       }),
-    []
-  )
+    [])
   const { chainId } = useNetworkType()
   const { library, account } = useWeb3React()
   const prevAccountState = usePrevious()
@@ -95,7 +94,7 @@ export function TokensProvider({ children = undefined }) {
   }
   const updateTokenList = (availableTokens = []) => {
     setPending(true)
-    get(`https://raw.githubusercontent.com/neonlabsorg/token-list/main/tokenlist.json`)
+    get(`https://raw.githubusercontent.com/neonlabsorg/token-list/develop/tokenlist.json`)
       .then(({ data }) => {
         mergeTokenList(data.tokens, availableTokens)
       })
