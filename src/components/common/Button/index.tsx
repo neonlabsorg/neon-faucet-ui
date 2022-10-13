@@ -1,38 +1,38 @@
-import React from "react"
+import React from 'react'
 
-const Button = ({
-  className = "",
-  transparent = false,
-  layoutTheme = "light",
-  gradient = false,
-  children = null,
-  big = false,
-  to = "",
-  crumpled = false,
-  gray = false,
-  iconed = false,
-  disabled = false,
-  onClick = () => {},
-}) => {
+const Button = (props) => {
+  const {
+    className = '',
+    transparent = false,
+    layoutTheme = 'light',
+    gradient = false,
+    children = null,
+    big = false,
+    to = '',
+    crumpled = false,
+    gray = false,
+    iconed = false,
+    disabled = false,
+    onClick = () => {
+    }
+  } = props
   const classNames = `${className} button
-        ${big ? "button--big" : ""}
-        ${crumpled ? "button--crumpled" : ""}
-        ${transparent ? "button--transparent" : ""}
-        ${gray ? "button--gray" : ""}
-        ${iconed ? "button--iconed" : ""}
+        ${big ? 'button--big' : ''}
+        ${crumpled ? 'button--crumpled' : ''}
+        ${transparent ? 'button--transparent' : ''}
+        ${gray ? 'button--gray' : ''}
+        ${iconed ? 'button--iconed' : ''}
         ${gradient ? `button--gradient` : `button--${layoutTheme}`}
-        ${disabled ? "button--disabled" : ""}`
+        ${disabled ? 'button--disabled' : ''}`
   return (
     <React.Fragment>
-      {to.length ? (
-        <a href={to} target="_blank" rel="noopener noreferrer" className={classNames}>
+      {to.length ?
+        <a href={to} target='_blank' rel='noopener noreferrer' className={classNames}>
           {children}
-        </a>
-      ) : (
+        </a> :
         <div className={classNames} onClick={onClick}>
           {children}
-        </div>
-      )}
+        </div>}
     </React.Fragment>
   )
 }
