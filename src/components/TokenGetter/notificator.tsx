@@ -10,11 +10,11 @@ export const Notificator = (data) => {
   } = data
   return <div
     className={`p-3 w-full relative ${response.success === true ? 'bg-green text-black' : 'bg-error-red text-white'}`}>
-    <a
+    <div
       className='absolute top-0 bottom-0 w-6 h-6 right-6 flex items-center justify-center m-auto cursor-pointer'
       onClick={onClose}>
       <CrossIcon className={`${response.success === false ? 'fill-white' : 'fill-black'}`} />
-    </a>
+    </div>
     <div className='max-w-1040px mx-auto'>
       {response.success === true ?
         <div className='w-7/12 pr-8 flex items-center'>
