@@ -8,6 +8,8 @@ import { usePrevious } from '../utils'
 import { useHttp } from '../utils/useHttp'
 import { FAUCET_URL } from '../config'
 
+const TOKEN_LIST = `https://raw.githubusercontent.com/neonlabsorg/token-list/v2.0.0/tokenlist.json`
+
 export const TokensContext = createContext({
   list: [],
   tokenErrors: {},
@@ -85,23 +87,19 @@ export function TokensProvider({ children = undefined }) {
   }
 
   const mergeTokenList = async (source = [], availableTokens = []) => {
-    const fullList = [...initialTokenListState].concat(
-      source.filter((item) => availableTokens.includes(item.address))
-    )
+    const fullList = [...initialTokenListState].concat(source.filter((item) => availableTokens.includes(item.address)))
     const newList = fullList.filter((item) => item.chainId === filteringChainId)
     setTokenList(newList)
     await requestListBalances(newList)
   }
+
   const updateTokenList = (availableTokens = []) => {
     setPending(true)
-    get(`https://raw.githubusercontent.com/neonlabsorg/token-list/develop/tokenlist.json`)
-      .then(({ data }) => {
-        mergeTokenList(data.tokens, availableTokens)
-      })
-      .catch((err) => {
-        setError(`Failed to fetch neon transfer token list: ${err.message}`)
-      })
-      .finally(() => setPending(false))
+    get(TOKEN_LIST).then(({ data }) => {
+      mergeTokenList(data.tokens, availableTokens)
+    }).catch((err) => {
+      setError(`Failed to fetch neon transfer token list: ${err.message}`)
+    }).finally(() => setPending(false))
   }
 
   useEffect(() => {
