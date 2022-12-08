@@ -5,6 +5,9 @@
 /.pnp
 /.idea
 .pnp.js
+.yarnrc.yml
+.editorconfig
+.yarn
 
 # testing
 /coverage
