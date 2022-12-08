@@ -6,6 +6,7 @@ import Layout from './components/common/Layout'
 import Button from './components/common/Button'
 import { ReactComponent as MobileErrorIcon } from './assets/mobile-error.svg'
 import TokenGetter from './components/TokenGetter'
+import CookieBanner from './components/CookieBanner';
 import { TokensProvider } from './contexts/tokens'
 import './App.scss'
 
@@ -52,6 +53,8 @@ function App() {
         <TokensProvider>
           <TokenGetter />
         </TokensProvider>
+
+        <CookieBanner />
       </Layout>
     </Web3ReactProvider>
   )
