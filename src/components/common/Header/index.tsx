@@ -19,19 +19,21 @@ export const Header = () => {
     </div>
     {!isMobile() && (
       <div className='flex items-center text-white'>
-        <a href='https://neon-labs.org' rel='noopener noreferrer' target='_blank'>
+        <a href='https://neon-labs.org' className='hover:text-green' rel='noopener noreferrer' target='_blank'>
           Neon Website
         </a>
         <a href='https://neonpass.live'
            rel='noopener noreferrer'
            target='_blank'
-           className='ml-6'>
+           className='ml-6 text-white hover:text-green'
+        >
           NeonPass
         </a>
         <a href='https://docs.neon-labs.org/docs/developing/utilities/faucet'
            rel='noopener noreferrer'
            target='_blank'
-           className='ml-6'>
+           className='ml-6 text-white hover:text-green'
+        >
           Help
         </a>
       </div>
