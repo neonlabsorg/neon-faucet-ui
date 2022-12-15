@@ -87,17 +87,17 @@ export const TokenSelect = (props: any) => {
     setOpened(false)
   })
 
-  const searchToken = ({ name, symbol, address, address_spl }) => {
+  const isSPLToken = ({ name, symbol, address, address_spl }) => {
     const fs = searchQuery.toLowerCase();
 
     return name.toLowerCase().includes(fs) ||
       symbol.toLowerCase().includes(fs) ||
       address.toLowerCase() === fs ||
       address_spl.toLowerCase() === fs;
-  }
+  };
 
   const filteredList = useMemo(() => {
-    return searchQuery.length ? list.filter(item => searchToken(item)) : list
+    return searchQuery.length ? list.filter(item => isSPLToken(item)) : list
   }, [list, searchQuery])
 
   return <div className={`flex flex-col relative ${className}`} ref={bodyRef}>
