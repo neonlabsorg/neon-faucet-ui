@@ -98,6 +98,7 @@ export const TokenSelect = (props: any) => {
 
   const filteredList = useMemo(() => {
     return searchQuery.length ? list.filter(item => isSPLToken(item)) : list
+    // eslint-disable-next-line
   }, [list, searchQuery])
 
   return <div className={`flex flex-col relative ${className}`} ref={bodyRef}>
