@@ -7,6 +7,7 @@ import { TokenSelect } from './TokenSelect'
 import { useHttp } from '../../utils/useHttp'
 import { CircleTimer } from '../common/CircleTimer'
 import { FAUCET_URL, REQUEST_LIMIT_SEC } from '../../config'
+import { AxiosError } from 'axios'
 
 export default function Form(props: any) {
   const {
@@ -15,6 +16,7 @@ export default function Form(props: any) {
     }
   } = props
   const { post } = useHttp()
+  const { deactivate } = useWeb3React()
   const [amount, setAmount] = useState(0)
   const [token, setToken] = useState<any>({})
   const [isMaxAmountIncreased, setIsMaxAmointIncreased] = useState(false)
@@ -45,7 +47,17 @@ export default function Form(props: any) {
           details: 'Transferred successfully'
         })
       })
-      .catch((err) => {
+      .catch((err: AxiosError) => {
+        const status = err.response.status
+
+        if (status === 502) {
+          try {
+            deactivate()
+          } catch (error) {
+            console.error(error)
+          }
+        }
+
         const details =
           err.response && err.response.statusText
             ? err.response.statusText
