@@ -13,6 +13,7 @@ export default function TokenGetter() {
   const [response, setResponse] = useState(null)
   const [waiting, setWaiting] = useState(false)
   const responseTimeout = useRef(null)
+  const xyz = 7
   const updateResponse = (resp) => {
     setResponse(resp)
     setWaiting(true)
