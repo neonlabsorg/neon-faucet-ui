@@ -7,9 +7,6 @@ import { ReactComponent as Warning } from '@/assets/warning.svg'
 import { Notificator } from './notificator'
 import { REQUEST_LIMIT_SEC } from '../../config'
 
-export interface XYZ {
-  
-}
 
 export default function TokenGetter() {
   /* { account, error, activate, deactivate, active } */
@@ -17,7 +14,7 @@ export default function TokenGetter() {
   const [response, setResponse] = useState(null)
   const [waiting, setWaiting] = useState(false)
   const responseTimeout = useRef(null)
-  const xyz = 7
+
   const updateResponse = (resp) => {
     setResponse(resp)
     setWaiting(true)
