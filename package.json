@@ -1,17 +1,20 @@
 {
   "name": "neon-faucet-ui",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "private": true,
   "engines": {
-    "node": ">=16.14.0"
+    "node": ">=16.14.0 && < 17.0.0"
   },
   "scripts": {
     "start": "craco start",
     "build": "craco build",
     "test": "npm-run-all test:*",
+    "lint:code": "eslint 'src/**/*.{ts,tsx,js,jsx}' --ignore-path .gitignore .",
+    "lint:fix": "yarn lint:code --fix",
     "test:types": "tsc",
     "test:lint": "eslint 'src/**/*.{ts,tsx,js,jsx}'",
-    "test:audit": "snyk-protect"
+    "test:audit": "snyk-protect",
+    "prepare": "husky install"
   },
   "dependencies": {
     "@snyk/protect": "1.963.0",
@@ -40,6 +43,8 @@
     "dotenv": "16.0.0",
     "eslint-plugin-prettier": "4.2.1",
     "http-proxy-middleware": "2.0.6",
+    "husky": ">=6",
+    "lint-staged": "^13.1.0",
     "postcss": "7.0.39",
     "prettier": "2.7.1",
     "react-scripts": "4.0.3",
@@ -57,6 +62,11 @@
       "last 1 chrome version",
       "last 1 firefox version",
       "last 1 safari version"
+    ]
+  },
+  "lint-staged": {
+    "**/*.{js,ts,tsx,html,css}": [
+      "yarn lint:fix"
     ]
   }
 }

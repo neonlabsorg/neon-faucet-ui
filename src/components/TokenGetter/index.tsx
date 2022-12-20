@@ -7,12 +7,14 @@ import { ReactComponent as Warning } from '@/assets/warning.svg'
 import { Notificator } from './notificator'
 import { REQUEST_LIMIT_SEC } from '../../config'
 
+
 export default function TokenGetter() {
   /* { account, error, activate, deactivate, active } */
   const { activate, error, active } = useWeb3React()
   const [response, setResponse] = useState(null)
   const [waiting, setWaiting] = useState(false)
   const responseTimeout = useRef(null)
+
   const updateResponse = (resp) => {
     setResponse(resp)
     setWaiting(true)
