@@ -1,7 +1,4 @@
-import React from 'react'
-import { escapeRegExp } from '../../../utils'
-
-const inputRegex = RegExp(`^\\d*(?:\\\\[.])?\\d*$`) // match escaped "." characters via in a non-capturing group
+import React, { useEffect, useState } from 'react'
 
 export const Input = React.memo<any>(function InnerInput(props) {
   const {
@@ -10,17 +7,38 @@ export const Input = React.memo<any>(function InnerInput(props) {
     placeholder,
     className,
     error,
+    token,
     ...rest
   } = props
-  const enforcer = (nextUserInput) => {
-    if (nextUserInput === '' || inputRegex.test(escapeRegExp(nextUserInput))) {
-      onUserInput(nextUserInput)
+
+  const [decimalPlaces, setDecimalPlaces] = useState(10);
+
+  useEffect(() => {
+    setDecimalPlaces(token.decimals)
+  }, [token]);
+
+  const getDecimalSize =(input) => {
+    const stringValue = input.toString();
+    const match = stringValue.match(/\.(\d+)/);
+    if (!match) {
+      return 0;
     }
+    return match[1].length;
   }
 
   const onChange = (event) => {
-    // replace commas with periods, because uniswap exclusively uses period as the decimal separator
-    enforcer(event.target.value.replace(/,/g, '.'))
+    const input = event.target.value;
+    const inputAsNumber = Number(input);
+
+    if (Number.isNaN(inputAsNumber)) {
+      return;
+    }
+
+    const inputWithLimitedDecimals = getDecimalSize(inputAsNumber) > decimalPlaces
+      ? inputAsNumber.toFixed(decimalPlaces)
+      : inputAsNumber;
+
+    onUserInput(inputWithLimitedDecimals);
   }
 
   return <input
@@ -37,7 +55,6 @@ export const Input = React.memo<any>(function InnerInput(props) {
     autoCorrect='off'
     // text-specific options
     type='text'
-    pattern='^[0-9]*[.,]?[0-9]*$'
     placeholder={placeholder || '0.0'}
     minLength={1}
     maxLength={79}
@@ -46,5 +63,3 @@ export const Input = React.memo<any>(function InnerInput(props) {
 })
 
 export default Input
-
-// const inputRegex = RegExp(`^\\d*(?:\\\\[.])?\\d*$`) // match escaped "." characters via in a non-capturing group
