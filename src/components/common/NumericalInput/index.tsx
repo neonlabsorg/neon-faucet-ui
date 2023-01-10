@@ -17,9 +17,8 @@ export const Input = React.memo<any>(function InnerInput(props) {
     setDecimalPlaces(token.decimals)
   }, [token]);
 
-  const getDecimalSize =(input) => {
-    const stringValue = input.toString();
-    const match = stringValue.match(/\.(\d+)/);
+  const getDecimalSize = (input: string) => {
+    const match = input.match(/\.(\d+)/);
     if (!match) {
       return 0;
     }
@@ -34,9 +33,9 @@ export const Input = React.memo<any>(function InnerInput(props) {
       return;
     }
 
-    const inputWithLimitedDecimals = getDecimalSize(inputAsNumber) > decimalPlaces
+    const inputWithLimitedDecimals = getDecimalSize(input) > decimalPlaces
       ? inputAsNumber.toFixed(decimalPlaces)
-      : inputAsNumber;
+      : input;
 
     onUserInput(inputWithLimitedDecimals);
   }
@@ -48,12 +47,10 @@ export const Input = React.memo<any>(function InnerInput(props) {
     {...rest}
     value={value}
     onChange={onChange}
-    // universal input options
     inputMode='decimal'
     title='Token Amount'
     autoComplete='off'
     autoCorrect='off'
-    // text-specific options
     type='text'
     placeholder={placeholder || '0.0'}
     minLength={1}
