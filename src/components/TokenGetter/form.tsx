@@ -88,9 +88,8 @@ export default function Form(props: any) {
           className={`w-full mb-4`}
           value={amount}
           error={isMaxAmountIncreased}
-          onUserInput={(val) => {
-            updateAmount(+val)
-          }}
+          token={token}
+          onUserInput={updateAmount}
         />
       </div>
       <div className='flex flex-col'>
