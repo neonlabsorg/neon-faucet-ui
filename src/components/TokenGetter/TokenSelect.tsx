@@ -33,7 +33,7 @@ export const TokenSymbol = ({ src = '', alt = '' }) => {
 
   return (
     <>
-      <img ref={imgRef} src={currentSource} alt={alt} />
+      <img className='w-full h-full' ref={imgRef} src={currentSource} alt={alt} />
     </>
   )
 }
@@ -51,7 +51,7 @@ const TokenRow = (data: any) => {
     <div className={`flex px-4 py-2 justify-between dark:text-white hover:bg-dark-hover-inputs cursor-pointer`}
          onClick={onClick}>
       <div className='flex items-center flex-grow pr-4'>
-        <div className='w-6 h-6 mr-4'>
+        <div className='w-6 max-w-6 min-h-6 h-6 max-h-6 min-h-6 mr-4'>
           <TokenSymbol src={token.logoURI} alt={token.name} />
         </div>
 
@@ -109,7 +109,7 @@ export const TokenSelect = (props: any) => {
         <span className='h-6'>
           {tokenName ? (
             <span className='inline-flex items-center'>
-              <div className='w-6 h-6 mr-4'>
+              <div className='w-6 max-w-6 min-h-6 h-6 max-h-6 min-h-6 mr-4'>
                 <TokenSymbol src={activeToken.logoURI} alt={activeToken.name} />
               </div>
               <span>{activeToken.name}</span>
