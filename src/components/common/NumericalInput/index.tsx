@@ -17,27 +17,23 @@ export const Input = React.memo<any>(function InnerInput(props) {
     setDecimalPlaces(token.decimals)
   }, [token]);
 
-  const getDecimalSize = (input: string) => {
-    const match = input.match(/\.(\d+)/);
-    if (!match) {
-      return 0;
-    }
-    return match[1].length;
-  }
-
   const onChange = (event) => {
-    const input = event.target.value;
+    let input = event.target.value;
     const inputAsNumber = Number(input);
 
     if (Number.isNaN(inputAsNumber)) {
       return;
     }
 
-    const inputWithLimitedDecimals = getDecimalSize(input) > decimalPlaces
-      ? inputAsNumber.toFixed(decimalPlaces)
-      : input;
+    if (input.includes('.')) {
+      let [integer, decimals] = input.split('.');
 
-    onUserInput(inputWithLimitedDecimals);
+      if (decimals.length >= decimalPlaces) {
+        input = integer + '.' + decimals.substring(0, decimalPlaces);
+      }
+    }
+
+    onUserInput(input);
   }
 
   return <input

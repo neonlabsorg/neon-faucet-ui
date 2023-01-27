@@ -8,7 +8,7 @@ import { usePrevious } from '../utils'
 import { useHttp } from '../utils/useHttp'
 import { FAUCET_URL } from '../config'
 
-const TOKEN_LIST = `https://raw.githubusercontent.com/neonlabsorg/token-list/v2.1.13/tokenlist.json`
+const TOKEN_LIST = `https://raw.githubusercontent.com/neonlabsorg/token-list/v2.1.3/tokenlist.json`
 
 export const TokensContext = createContext({
   list: [],
