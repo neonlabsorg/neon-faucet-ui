@@ -40,6 +40,10 @@
       font-weight: 700;
       width: fit-content;
       text-align: left;
+
+      &.secondary {
+        color: #BAC0CD;
+      }
     }
   }
 
