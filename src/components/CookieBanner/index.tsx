@@ -43,7 +43,7 @@ export const CookieBanner = () => {
           If you continue browsing, we consider that you have accepted <a href='https://neon-labs.org/cookie-policy' rel='noopener noreferrer' target='_blank'>cookies policy</a>.
         </p>
         <div className='actions'>
-          <button onClick={accept}>Accept</button>
+          <button className='main' onClick={accept}>Accept</button>
           <button className='secondary' onClick={postpone}>Ask me later</button>
         </div>
       </div>
