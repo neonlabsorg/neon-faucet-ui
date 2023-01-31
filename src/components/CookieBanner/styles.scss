@@ -14,6 +14,7 @@
     margin-bottom: 10px;
 
     a {
+      @apply transition-colors ease-in-out duration-300 hover:text-green;
       text-decoration: underline;
       color: #ffffff;
     }
@@ -31,8 +32,8 @@
     grid-column-gap: 10px;
 
     button {
+      @apply transition-colors ease-in-out duration-300;
       background: none;
-      color: white;
       border: none;
       padding: 0;
       cursor: pointer;
@@ -41,8 +42,13 @@
       width: fit-content;
       text-align: left;
 
+      &.main {
+        @apply text-white hover:text-green;
+      }
+
       &.secondary {
         color: #BAC0CD;
+        @apply hover:text-dark-300;
       }
     }
   }
