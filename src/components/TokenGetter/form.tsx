@@ -71,10 +71,10 @@ export default function Form(props: any) {
   }
 
   const updateAmount = (value) => {
-    setAmount(value)
     if (value < 0) return
     if (value > 100) setIsMaxAmointIncreased(true)
     else setIsMaxAmointIncreased(false)
+    setAmount(value)
   }
 
   return (
