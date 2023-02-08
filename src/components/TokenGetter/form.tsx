@@ -74,7 +74,7 @@ export default function Form(props: any) {
     if (value < 0) return
     if (value > 100) setIsMaxAmointIncreased(true)
     else setIsMaxAmointIncreased(false)
-    setAmount(value)
+    setAmount(parseFloat(value))
   }
 
   return (
