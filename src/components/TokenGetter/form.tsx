@@ -3,11 +3,11 @@ import Button from '../common/Button'
 import { Input as NumericalInput } from '../common/NumericalInput'
 import { Loader } from '../common/Loader'
 import { useWeb3React } from '@web3-react/core'
+import { AxiosError } from 'axios'
 import { TokenSelect } from './TokenSelect'
 import { useHttp } from '../../utils/useHttp'
 import { CircleTimer } from '../common/CircleTimer'
 import { FAUCET_URL, REQUEST_LIMIT_SEC } from '../../config'
-import { AxiosError } from 'axios'
 
 export default function Form(props: any) {
   const {
@@ -29,22 +29,15 @@ export default function Form(props: any) {
       token.symbol === 'NEON' ? `${FAUCET_URL}/request_neon` : `${FAUCET_URL}/request_erc20`
 
     const data =
-      token.symbol === 'NEON'
-        ? {
-          amount,
-          wallet: account
-        }
-        : {
-          amount,
-          wallet: account,
-          token_addr: token.address
-        }
+      token.symbol === 'NEON' ? { amount, wallet: account } :
+        { amount, wallet: account, token_addr: token.address }
     setAirdropPending(true)
     post(url, data)
       .then(() => {
         onResponse({
           success: true,
-          details: 'Transferred successfully'
+          details: 'Transferred successfully',
+          token
         })
       })
       .catch((err: AxiosError) => {
@@ -59,12 +52,13 @@ export default function Form(props: any) {
         }
 
         const details =
-          err.response && err.response.statusText
-            ? err.response.statusText
-            : 'Server is not responsing'
+          err.response && err.response.statusText ?
+            err.response.statusText :
+            'Server is not responding'
         onResponse({
           success: false,
-          details
+          details,
+          token
         })
       })
       .finally(() => setAirdropPending(false))
@@ -72,9 +66,16 @@ export default function Form(props: any) {
 
   const updateAmount = (value) => {
     if (value < 0) return
-    if (value > 100) setIsMaxAmointIncreased(true)
-    else setIsMaxAmointIncreased(false)
-    setAmount(parseFloat(value))
+    if (value > 100) {
+      setIsMaxAmointIncreased(true)
+    } else {
+      setIsMaxAmointIncreased(false)
+    }
+    if (value) {
+      setAmount(parseFloat(value))
+    } else {
+      setAmount(0)
+    }
   }
 
   return (

@@ -6,10 +6,9 @@ import Button from '../common/Button'
 import { ReactComponent as Warning } from '@/assets/warning.svg'
 import { Notificator } from './notificator'
 import { REQUEST_LIMIT_SEC } from '../../config'
-
+import web3 from 'web3'
 
 export default function TokenGetter() {
-  /* { account, error, activate, deactivate, active } */
   const { activate, error, active } = useWeb3React()
   const [response, setResponse] = useState(null)
   const [waiting, setWaiting] = useState(false)
@@ -29,6 +28,32 @@ export default function TokenGetter() {
       await activate(injected)
     } catch (ex) {
       console.log(ex)
+    }
+  }
+
+  async function switchNetwork() {
+    const chainId = web3.utils.toHex(245022926)
+    const chainName = 'Neon (Devnet)'
+    const rpcUrls = ['https://devnet.neonevm.org']
+    try {
+      await window['ethereum'].request({
+        method: 'wallet_switchEthereumChain',
+        params: [{ chainId }]
+      })
+    } catch (e) {
+      if (e.code === 4902) {
+        await window['ethereum'].request({
+          method: 'wallet_addEthereumChain',
+          params: [{
+            rpcUrls,
+            chainName,
+            chainId,
+            nativeCurrency: { name: 'Neon', symbol: 'NEON', decimals: 18 }
+          }]
+        })
+      } else {
+        console.log(e)
+      }
     }
   }
 
@@ -60,8 +85,8 @@ export default function TokenGetter() {
               </div>
             </div>
             <div className='pl-16 pt-6 flex flex-wrap'>
-              <Button className='mr-4' layoutTheme='dark' onClick={connect}>
-                Connect Wallet
+              <Button className='mr-4' layoutTheme='dark' onClick={switchNetwork}>
+                Switch To Neon
               </Button>
               <Button transparent layoutTheme='dark' onClick={() => window.location.reload()}>
                 Reload page
