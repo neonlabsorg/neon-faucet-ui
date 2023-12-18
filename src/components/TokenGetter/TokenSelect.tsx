@@ -4,6 +4,17 @@ import { Loader } from '../common/Loader'
 import stub from '../../assets/no_symbol.svg'
 import { ReactComponent as DdIcon } from '../../assets/dropdown.svg'
 import { useOnClickOutside } from '../../hooks'
+import neonTokenIcon from '../../assets/tokens/neon_token_md.png'
+import wNeonTokenIcon from '../../assets/tokens/wrapped-neon-logo.svg'
+import usdcTokenIcon from '../../assets/tokens/usd-coin-usdc-logo.svg'
+import usdtTokenIcon from '../../assets/tokens/tether-usdt-logo.svg'
+
+const icons = {
+  USDT: usdtTokenIcon,
+  USDC: usdcTokenIcon,
+  NEON: neonTokenIcon,
+  wNEON: wNeonTokenIcon
+}
 
 export const TokenSymbol = ({ src = '', alt = '' }) => {
   const imgRef = useRef(null)
@@ -38,6 +49,8 @@ export const TokenSymbol = ({ src = '', alt = '' }) => {
   )
 }
 
+const tokenLogo = (token: any): string => icons[token.symbol]
+
 const TokenRow = (data: any) => {
   const {
     token = { logoURI: '', symbol: '', address: '', name: '' },
@@ -52,7 +65,7 @@ const TokenRow = (data: any) => {
          onClick={onClick}>
       <div className='flex items-center flex-grow pr-4'>
         <div className='w-6 max-w-6 min-h-6 h-6 max-h-6 min-h-6 mr-4'>
-          <TokenSymbol src={token.logoURI} alt={token.name} />
+          <TokenSymbol src={tokenLogo(token)} alt={token.name} />
         </div>
 
         <div className='flex-grow flex flex-col'>
@@ -88,13 +101,13 @@ export const TokenSelect = (props: any) => {
   })
 
   const isSPLToken = ({ name, symbol, address, address_spl }) => {
-    const fs = searchQuery.toLowerCase();
+    const fs = searchQuery.toLowerCase()
 
     return name.toLowerCase().includes(fs) ||
       symbol.toLowerCase().includes(fs) ||
       address.toLowerCase() === fs ||
-      address_spl.toLowerCase() === fs;
-  };
+      address_spl.toLowerCase() === fs
+  }
 
   const filteredList = useMemo(() => {
     return searchQuery.length ? list.filter(item => isSPLToken(item)) : list
@@ -127,12 +140,12 @@ export const TokenSelect = (props: any) => {
         >
           <div className='h-14 border-b border-white'>
             <input
-              type="text"
+              type='text'
               className='h-full bg-transparent outline-none px-4 py-2 w-full'
               value={searchQuery}
               placeholder='Search token...'
               onChange={(event) => {
-                setSearchQuery(event.target.value);
+                setSearchQuery(event.target.value)
               }}
             />
           </div>

@@ -25,15 +25,13 @@ export const Header = () => {
         <a href='https://neonpass.live'
            rel='noopener noreferrer'
            target='_blank'
-           className='ml-6 text-white hover:text-green'
-        >
+           className='ml-6 text-white hover:text-green'>
           NeonPass
         </a>
-        <a href='https://docs.neon-labs.org/docs/developing/utilities/faucet'
+        <a href='https://docs.neonfoundation.io/docs/developing/utilities/faucet'
            rel='noopener noreferrer'
            target='_blank'
-           className='ml-6 text-white hover:text-green'
-        >
+           className='ml-6 text-white hover:text-green'>
           Help
         </a>
       </div>

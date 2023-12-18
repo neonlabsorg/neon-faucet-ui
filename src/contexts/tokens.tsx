@@ -6,7 +6,7 @@ import { NEON_TOKEN_MINT, NEON_TOKEN_MINT_DECIMALS } from 'neon-portal/src/const
 import { CHAIN_IDS } from '../connectors'
 import { usePrevious } from '../utils'
 import { useHttp } from '../utils/useHttp'
-import { FAUCET_URL, TOKEN_LIST } from '../config'
+import { FAUCET_URL } from '../config'
 
 
 export const TokensContext = createContext({
@@ -94,8 +94,8 @@ export function TokensProvider({ children = undefined }) {
 
   const updateTokenList = (availableTokens = []) => {
     setPending(true)
-    get(TOKEN_LIST).then(({ data }) => {
-      mergeTokenList(data.tokens, availableTokens)
+    import('token-list/tokenlist.json').then(({ tokens }) => {
+      mergeTokenList(tokens, availableTokens)
     }).catch((err) => {
       setError(`Failed to fetch neon transfer token list: ${err.message}`)
     }).finally(() => setPending(false))
