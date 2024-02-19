@@ -1,6 +1,6 @@
 {
   "name": "neon-faucet-ui",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "private": true,
   "engines": {
     "node": ">=16.14.0 && < 17.0.0"
