@@ -40,7 +40,7 @@ export const CookieBanner = () => {
           We use cookies
         </p>
         <p className='description'>
-          If you continue browsing, we consider that you have accepted the <a href='https://neon-labs.org/cookie-policy' rel='noopener noreferrer' target='_blank'>cookies policy</a>.
+          If you continue browsing, we consider that you have accepted the <a href='https://neonevm.org/cookie-policy' rel='noopener noreferrer' target='_blank'>cookies policy</a>.
         </p>
         <div className='actions'>
           <button className='main' onClick={accept}>Accept</button>

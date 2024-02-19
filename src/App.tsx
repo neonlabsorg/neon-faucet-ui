@@ -27,12 +27,12 @@ const MobileErrorOverlay = () => {
           <br /> at mobile phones.
         </div>
         <div className='text-center text-gray-300'>
-          But you can still explore the possibilities of Neon ecosystem at neon-labs.org
+          But you can still explore the possibilities of Neon ecosystem at neonevm.org
         </div>
       </div>
       <div className='mt-10'>
-        <a rel='noopener noreferrer' target='_blank' href='https://neon-labs.org'>
-          <Button>Visit Neon-labs</Button>
+        <a rel='noopener noreferrer' target='_blank' href='https://neonevm.org/'>
+          <Button>Visit Neon EVM</Button>
         </a>
       </div>
     </div>
