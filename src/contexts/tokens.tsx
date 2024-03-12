@@ -43,7 +43,7 @@ export function TokensProvider({ children = undefined }) {
       })
     }
     return []
-  }, [chainId])
+  }, [neonChain])
   const { library, account } = useWeb3React()
   const prevAccountState = usePrevious()
   const [list, setTokenList] = useState(initialTokenListState)
