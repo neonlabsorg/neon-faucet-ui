@@ -4,6 +4,7 @@ import { useMemo } from 'react'
 export const ChainId = {
   111: 'LOCAL',
   245022926: 'devnet',
+  245022927: 'sol-devnet',
   245022940: 'testnet',
   245022934: 'mainnet-beta'
 }

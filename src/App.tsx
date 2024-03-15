@@ -53,7 +53,6 @@ function App() {
         <TokensProvider>
           <TokenGetter />
         </TokensProvider>
-
         <CookieBanner />
       </Layout>
     </Web3ReactProvider>

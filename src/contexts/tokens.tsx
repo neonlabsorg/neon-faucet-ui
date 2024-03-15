@@ -8,7 +8,6 @@ import { usePrevious } from '../utils'
 import { useHttp } from '../utils/useHttp'
 import { FAUCET_URL } from '../config'
 
-
 export const TokensContext = createContext({
   list: [],
   tokenErrors: {},
@@ -32,15 +31,19 @@ const NEON_TOKEN_MODEL = {
 
 export function TokensProvider({ children = undefined }) {
   const { get } = useHttp()
-  const initialTokenListState = useMemo(() =>
-      Object.keys(CHAIN_IDS).map((key) => {
+  const { chainId } = useNetworkType()
+  const neonChain = useMemo(() => chainId === CHAIN_IDS.devnet, [chainId])
+  const initialTokenListState = useMemo(() => {
+    if(neonChain) { //Due to the issue with invisible native tokens in other chains
+      return Object.keys(CHAIN_IDS).map((key) => {
         const chainId = CHAIN_IDS[key]
         const model = Object.assign({}, NEON_TOKEN_MODEL)
         model.chainId = chainId
         return model
-      }),
-    [])
-  const { chainId } = useNetworkType()
+      })
+    }
+    return []
+  }, [neonChain])
   const { library, account } = useWeb3React()
   const prevAccountState = usePrevious()
   const [list, setTokenList] = useState(initialTokenListState)
@@ -87,7 +90,7 @@ export function TokensProvider({ children = undefined }) {
 
   const mergeTokenList = async (source = [], availableTokens = []) => {
     const fullList = [...initialTokenListState].concat(source.filter((item) => availableTokens.includes(item.address)))
-    const newList = fullList.filter((item) => item.chainId === filteringChainId)
+    const newList = neonChain ? fullList.filter((item) => item.chainId === filteringChainId) : fullList.map((item) => { return { ...item, chainId: chainId }})
     setTokenList(newList)
     await requestListBalances(newList)
   }
