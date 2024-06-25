@@ -77,10 +77,10 @@ export default function TokenGetter() {
               </div>
               <div className='flex flex-col'>
                 <div className='text-xl font-bold mb-1'>
-                  Your wallet not connected to NEON Devnet
+                  Your wallet is not connected to the NEON EVM Devnet
                 </div>
                 <div>
-                  Please select the appropriate Ethereum network and try connecting the wallet again
+                  Please select the appropriate network and try again
                 </div>
               </div>
             </div>
