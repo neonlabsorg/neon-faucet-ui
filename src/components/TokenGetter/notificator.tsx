@@ -53,7 +53,7 @@ export const Notificator = (data) => {
             <div className='flex flex-col'>
               <h2 className='font-bold'>{response.details}</h2>
               <p className='text-sm'>
-                {'Next request will be unlock after minute expiration for a security reasons'}
+                {'For security reasons, please wait a minute before making a new request'}
               </p>
             </div>
           </div>
@@ -70,7 +70,7 @@ export const Notificator = (data) => {
             <div className='flex flex-col'>
               <h2 className='font-bold'>{response.details}</h2>
               <p className='text-sm'>
-                {'Next request will be unlock after minute expiration for a security reasons'}
+                {'For security reasons, please wait a minute before making a new request'}
               </p>
             </div>
           </div>

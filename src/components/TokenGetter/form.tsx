@@ -36,7 +36,7 @@ export default function Form(props: any) {
       .then(() => {
         onResponse({
           success: true,
-          details: 'Transferred successfully',
+          details: 'Transfer Successful',
           token
         })
       })
@@ -81,7 +81,7 @@ export default function Form(props: any) {
   return (
     <div className={`${className} tg-form relative`}>
       <h1 className='text-xl font-bold max-w-xs mb-8 leading-tight'>
-        Choose token type and the amount to be airdropped.
+        Choose the token type and the amount to be airdropped.
       </h1>
       <div className='tg-form__amount'>
         <TokenSelect className='w-full mb-4' tokenName={token.name} onChoose={setToken} />
