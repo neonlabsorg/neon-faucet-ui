@@ -4,7 +4,7 @@ on:
 
 jobs:
   deploy:
-    runs-on: ubuntu-latest
+    runs-on: ["self-hosted", "k8s-prod"]
     strategy:
       matrix:
         node-version: [16]
@@ -16,6 +16,9 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: ${{ matrix.node-version}}
+
+      - name: Use Yarn
+        run: corepack enable
 
       - name: Install modules
         run: yarn install
