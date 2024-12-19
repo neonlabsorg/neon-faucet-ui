@@ -11,12 +11,14 @@ import { FAUCET_URL, REQUEST_LIMIT_SEC } from '../../config'
 
 export default function Form(props: any) {
   const {
-    className = '', blocked = false, response = null, waiting = false,
-    onResponse = () => {
-    }
+    className = '',
+    blocked = false,
+    response = null,
+    waiting = false,
+    onResponse = () => {}
   } = props
   const { post } = useHttp()
-  const { deactivate } = useWeb3React()
+  const { connector } = useWeb3React()
   const [amount, setAmount] = useState(0)
   const [token, setToken] = useState<any>({})
   const [isMaxAmountIncreased, setIsMaxAmointIncreased] = useState(false)
@@ -29,8 +31,9 @@ export default function Form(props: any) {
       token.symbol === 'NEON' ? `${FAUCET_URL}/request_neon` : `${FAUCET_URL}/request_erc20`
 
     const data =
-      token.symbol === 'NEON' ? { amount, wallet: account } :
-        { amount, wallet: account, token_addr: token.address }
+      token.symbol === 'NEON'
+        ? { amount, wallet: account }
+        : { amount, wallet: account, token_addr: token.address }
     setAirdropPending(true)
     post(url, data)
       .then(() => {
@@ -45,16 +48,16 @@ export default function Form(props: any) {
 
         if (status === 502) {
           try {
-            deactivate()
+            connector.deactivate()
           } catch (error) {
             console.error(error)
           }
         }
 
         const details =
-          err.response && err.response.statusText ?
-            err.response.statusText :
-            'Server is not responding'
+          err.response && err.response.statusText
+            ? err.response.statusText
+            : 'Server is not responding'
         onResponse({
           success: false,
           details,
@@ -86,6 +89,7 @@ export default function Form(props: any) {
       <div className='tg-form__amount'>
         <TokenSelect className='w-full mb-4' tokenName={token.name} onChoose={setToken} />
         <NumericalInput
+          //@ts-ignore
           className={`w-full mb-4`}
           value={amount}
           error={isMaxAmountIncreased}

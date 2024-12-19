@@ -1,8 +1,7 @@
 import { useWeb3React } from '@web3-react/core'
 import { createContext, useContext, useEffect, useMemo, useState } from 'react'
-import { useNetworkType } from '../hooks'
-import ERC20_ABI from '../hooks/abi/erc20.json'
-import { NEON_TOKEN_MINT, NEON_TOKEN_MINT_DECIMALS } from 'neon-portal/src/constants'
+// import { useNetworkType } from '../hooks'
+// import ERC20_ABI from '../hooks/abi/erc20.json'
 import { CHAIN_IDS } from '../connectors'
 import { usePrevious } from '../utils'
 import { useHttp } from '../utils/useHttp'
@@ -13,17 +12,15 @@ export const TokensContext = createContext({
   tokenErrors: {},
   pending: false,
   tokenManagerOpened: false,
-  setTokenManagerOpened: () => {
-  },
-  updateTokenList: () => {
-  }
+  setTokenManagerOpened: () => {},
+  updateTokenList: () => {}
 })
 
 const NEON_TOKEN_MODEL = {
   chainId: 0,
-  address_spl: NEON_TOKEN_MINT,
+  address_spl: '89dre8rZjLNft7HoupGiyxu3MNftR577ZYu8bHe2kK7g',
   address: '',
-  decimals: NEON_TOKEN_MINT_DECIMALS,
+  decimals: 18,
   name: 'Neon',
   symbol: 'NEON',
   logoURI: 'https://raw.githubusercontent.com/neonlabsorg/token-list/main/neon_token_md.png'
@@ -31,10 +28,13 @@ const NEON_TOKEN_MODEL = {
 
 export function TokensProvider({ children = undefined }) {
   const { get } = useHttp()
-  const { chainId } = useNetworkType()
+  const { provider, account, chainId } = useWeb3React()
+
+  // const { chainId } = useNetworkType()
   const neonChain = useMemo(() => chainId === CHAIN_IDS.devnet, [chainId])
   const initialTokenListState = useMemo(() => {
-    if(neonChain) { //Due to the issue with invisible native tokens in other chains
+    if (neonChain) {
+      //Due to the issue with invisible native tokens in other chains
       return Object.keys(CHAIN_IDS).map((key) => {
         const chainId = CHAIN_IDS[key]
         const model = Object.assign({}, NEON_TOKEN_MODEL)
@@ -44,7 +44,6 @@ export function TokensProvider({ children = undefined }) {
     }
     return []
   }, [neonChain])
-  const { library, account } = useWeb3React()
   const prevAccountState = usePrevious()
   const [list, setTokenList] = useState(initialTokenListState)
   const [pending, setPending] = useState(false)
@@ -62,13 +61,13 @@ export function TokensProvider({ children = undefined }) {
   }, [chainId])
 
   const getEthBalance = async (token) => {
-    if (token.address_spl === NEON_TOKEN_MINT) {
-      const balance = await library.eth.getBalance(account)
-      return +(balance / Math.pow(10, token.decimals)).toFixed(4)
+    if (token.address_spl === '89dre8rZjLNft7HoupGiyxu3MNftR577ZYu8bHe2kK7g') {
+      const balance = await provider.getBalance(account)
+      return +(Number(balance) / Math.pow(10, token.decimals)).toFixed(4)
     }
-    const tokenInstance = new library.eth.Contract(ERC20_ABI, token.address)
-    const balance = await tokenInstance.methods.balanceOf(account).call()
-    return balance / Math.pow(10, token.decimals)
+    // const tokenInstance = new library.eth.Contract(ERC20_ABI, token.address)
+    // const balance = await tokenInstance.methods.balanceOf(account).call()
+    // return balance / Math.pow(10, token.decimals)
   }
 
   const requestListBalances = async (list) => {
@@ -89,19 +88,28 @@ export function TokensProvider({ children = undefined }) {
   }
 
   const mergeTokenList = async (source = [], availableTokens = []) => {
-    const fullList = [...initialTokenListState].concat(source.filter((item) => availableTokens.includes(item.address)))
-    const newList = neonChain ? fullList.filter((item) => item.chainId === filteringChainId) : fullList.map((item) => { return { ...item, chainId: chainId }})
+    const fullList = [...initialTokenListState].concat(
+      source.filter((item) => availableTokens.includes(item.address))
+    )
+    const newList = neonChain
+      ? fullList.filter((item) => item.chainId === filteringChainId)
+      : fullList.map((item) => {
+          return { ...item, chainId: chainId }
+        })
     setTokenList(newList)
     await requestListBalances(newList)
   }
 
   const updateTokenList = (availableTokens = []) => {
     setPending(true)
-    import('token-list/tokenlist.json').then(({ tokens }) => {
-      mergeTokenList(tokens, availableTokens)
-    }).catch((err) => {
-      setError(`Failed to fetch neon transfer token list: ${err.message}`)
-    }).finally(() => setPending(false))
+    import('token-list/tokenlist.json')
+      .then(({ tokens }) => {
+        mergeTokenList(tokens, availableTokens)
+      })
+      .catch((err) => {
+        setError(`Failed to fetch neon transfer token list: ${err.message}`)
+      })
+      .finally(() => setPending(false))
   }
 
   useEffect(() => {

@@ -1,15 +1,14 @@
-import { UnsupportedChainIdError, useWeb3React } from '@web3-react/core'
+import { useWeb3React } from '@web3-react/core'
 import { useRef, useState } from 'react'
 import Form from './form'
-import { injected } from '../../connectors'
 import Button from '../common/Button'
 import { ReactComponent as Warning } from '@/assets/warning.svg'
 import { Notificator } from './notificator'
 import { REQUEST_LIMIT_SEC } from '../../config'
 import web3 from 'web3'
 
-export default function TokenGetter() {
-  const { activate, error, active } = useWeb3React()
+export default function TokenGetter({ error }) {
+  const { connector, isActive } = useWeb3React()
   const [response, setResponse] = useState(null)
   const [waiting, setWaiting] = useState(false)
   const responseTimeout = useRef(null)
@@ -25,7 +24,8 @@ export default function TokenGetter() {
 
   async function connect() {
     try {
-      await activate(injected)
+      debugger
+      await connector.activate()
     } catch (ex) {
       console.log(ex)
     }
@@ -36,20 +36,22 @@ export default function TokenGetter() {
     const chainName = 'Neon (Devnet)'
     const rpcUrls = ['https://devnet.neonevm.org']
     try {
-      await window['ethereum'].request({
+      await connector.provider.request({
         method: 'wallet_switchEthereumChain',
         params: [{ chainId }]
       })
     } catch (e) {
       if (e.code === 4902) {
-        await window['ethereum'].request({
+        await connector.provider.request({
           method: 'wallet_addEthereumChain',
-          params: [{
-            rpcUrls,
-            chainName,
-            chainId,
-            nativeCurrency: { name: 'Neon', symbol: 'NEON', decimals: 18 }
-          }]
+          params: [
+            {
+              rpcUrls,
+              chainName,
+              chainId,
+              nativeCurrency: { name: 'Neon', symbol: 'NEON', decimals: 18 }
+            }
+          ]
         })
       } else {
         console.log(e)
@@ -58,7 +60,7 @@ export default function TokenGetter() {
   }
 
   const renderByAccountState = () => {
-    if (active)
+    if (isActive)
       return (
         <Form
           waiting={waiting}
@@ -68,53 +70,50 @@ export default function TokenGetter() {
         />
       )
     else if (error) {
-      if (error instanceof UnsupportedChainIdError) {
-        return (
-          <div className='flex flex-col px-6'>
-            <div className='flex items-center'>
-              <div className='w-12 h-12 flex items-center justify-center mr-4'>
-                <Warning />
-              </div>
-              <div className='flex flex-col'>
-                <div className='text-xl font-bold mb-1'>
-                  Your wallet is not connected to the NEON EVM Devnet
-                </div>
-                <div>
-                  Please select the appropriate network and try again
-                </div>
-              </div>
-            </div>
-            <div className='pl-16 pt-6 flex flex-wrap'>
-              <Button className='mr-4' layoutTheme='dark' onClick={switchNetwork}>
-                Switch To Neon
-              </Button>
-              <Button transparent layoutTheme='dark' onClick={() => window.location.reload()}>
-                Reload page
-              </Button>
-            </div>
+      // if (error instanceof UnsupportedChainIdError) {
+      //   return (
+      //     <div className='flex flex-col px-6'>
+      //       <div className='flex items-center'>
+      //         <div className='w-12 h-12 flex items-center justify-center mr-4'>
+      //           <Warning />
+      //         </div>
+      //         <div className='flex flex-col'>
+      //           <div className='text-xl font-bold mb-1'>
+      //             Your wallet is not connected to the NEON EVM Devnet
+      //           </div>
+      //           <div>Please select the appropriate network and try again</div>
+      //         </div>
+      //       </div>
+      //       <div className='pl-16 pt-6 flex flex-wrap'>
+      //         <Button className='mr-4' layoutTheme='dark' onClick={switchNetwork}>
+      //           Switch To Neon
+      //         </Button>
+      //         <Button transparent layoutTheme='dark' onClick={() => window.location.reload()}>
+      //           Reload page
+      //         </Button>
+      //       </div>
+      //     </div>
+      //   )
+      // } else {
+      return (
+        <div className='flex items-center'>
+          <div className='w-12 h-12 flex items-center justify-center mr-6'>
+            <Warning />
           </div>
-        )
-      } else {
-        return (
-          <div className='flex items-center'>
-            <div className='w-12 h-12 flex items-center justify-center mr-6'>
-              <Warning />
-            </div>
-            <div className='mr-6 text-xl font-bold'>
-              Check is your metamask wallet
-              <br /> installed on Chrome as extension.
-            </div>
-            <Button transparent layoutTheme='dark' onClick={() => window.location.reload()}>
-              Reload page
-            </Button>
+          <div className='mr-6 text-xl font-bold'>
+            Check is your metamask wallet
+            <br /> installed on Chrome as extension.
           </div>
-        )
-      }
+          <Button transparent layoutTheme='dark' onClick={() => window.location.reload()}>
+            Reload page
+          </Button>
+        </div>
+      )
+      // }
     } else {
       return (
         <div className='flex flex-col px-6 items-start'>
-          <div
-            className='text-2xl font-bold max-w-xl mb-12'>{`Neon's Faucet service will help you get NEON test tokens or other ERC-20 test tokens to be used for testing applications on devnet.`}</div>
+          <div className='text-2xl font-bold max-w-xl mb-12'>{`Neon's Faucet service will help you get NEON test tokens or other ERC-20 test tokens to be used for testing applications on devnet.`}</div>
           <div className='flex flex-wrap items-center'>
             <div className='flex flex-col mr-16 mb-4 sm:mb-0'>
               <div className='text-xl font-bold'>{`Let's get started:`}</div>
