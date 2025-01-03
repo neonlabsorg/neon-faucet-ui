@@ -2,12 +2,13 @@
   "name": "neon-faucet-ui",
   "version": "1.1.1",
   "private": true,
+  "type": "module",
   "engines": {
-    "node": ">=16.14.0 && < 17.0.0"
+    "node": ">=18.16.0"
   },
   "scripts": {
-    "start": "craco start",
-    "build": "craco build",
+    "start": "vite",
+    "build": "vite build",
     "test": "npm-run-all test:*",
     "lint:code": "eslint 'src/**/*.{ts,tsx,js,jsx}' --ignore-path .gitignore .",
     "lint:fix": "yarn lint:code --fix",
@@ -17,16 +18,19 @@
     "prepare": "husky install"
   },
   "dependencies": {
+    "@ethersproject/providers": "^5.7.2",
     "@snyk/protect": "1.963.0",
     "@web3-react/core": "6.1.9",
     "@web3-react/injected-connector": "6.0.7",
     "axios": "0.26.1",
     "bowser": "2.11.0",
+    "ethers": "^6.13.3",
     "include-media": "1.4.9",
     "neon-portal": "1.3.4",
     "npm-run-all": "4.1.5",
     "react": "17.0.2",
     "react-dom": "17.0.2",
+    "sass-loader": "^16.0.4",
     "tailwindcss": "npm:@tailwindcss/postcss7-compat@2.2.17",
     "token-list": "https://github.com/neonlabsorg/token-list.git#v5.0.0",
     "web3": "1.6.1"
@@ -40,6 +44,7 @@
     "@types/node": "18.0.3",
     "@types/react": "18.0.15",
     "@types/react-dom": "18.0.6",
+    "@vitejs/plugin-react": "^4.3.4",
     "autoprefixer": "9.8.8",
     "dotenv": "16.0.0",
     "eslint-plugin-prettier": "4.2.1",
@@ -51,7 +56,12 @@
     "react-scripts": "4.0.3",
     "sass": "1.50.0",
     "style-loader": "3.3.1",
-    "typescript": "4.7.4"
+    "typescript": "4.7.4",
+    "vite": "^6.0.7",
+    "vite-plugin-commonjs": "^0.10.4",
+    "vite-plugin-node-polyfills": "^0.22.0",
+    "vite-plugin-svgr": "^4.3.0",
+    "vite-tsconfig-paths": "^5.1.4"
   },
   "browserslist": {
     "production": [
@@ -66,7 +76,7 @@
     ]
   },
   "lint-staged": {
-    "**/*.{js,ts,tsx,html,css}": [
+    "**/*.{js,ts,tsx,css}": [
       "yarn lint:fix"
     ]
   }

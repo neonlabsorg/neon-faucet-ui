@@ -11,18 +11,20 @@
   &__title {
     font-size: 56px;
     font-weight: 500;
-    @include media(">=xSmall", "<medium") {
-      font-size: 32px;
-    }
+    // TODO: uncomment this
+    // @include media(">=500px", "<960px") {
+    //   font-size: 32px;
+    // }
     margin-bottom: 40px;
   }
   &__summary {
     font-weight: 500;
     font-size: 18px;
     margin-bottom: 24px;
-    @include media(">=xSmall", "<medium") {
-      font-size: 14px;
-    }
+    // TODO: uncomment this
+    // @include media(">=500px", "<960px") {
+    //   font-size: 14px;
+    // }
   }
   &__unlogged {
     display: flex;

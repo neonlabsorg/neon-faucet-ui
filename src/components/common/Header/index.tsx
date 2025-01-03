@@ -1,4 +1,4 @@
-import { ReactComponent as Logo } from '@/assets/logo.svg'
+import Logo from '@/assets/logo.svg'
 import { useWeb3React } from '@web3-react/core'
 import { isMobile } from '../../../config'
 

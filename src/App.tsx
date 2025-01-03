@@ -1,17 +1,19 @@
 import { Web3ReactProvider } from '@web3-react/core'
-import Web3 from 'web3'
+import { Web3Provider } from '@ethersproject/providers'
 
 import { isMobile } from './config'
 import Layout from './components/common/Layout'
 import Button from './components/common/Button'
-import { ReactComponent as MobileErrorIcon } from './assets/mobile-error.svg'
+import MobileErrorIcon from '@/assets/mobile-error.svg'
 import TokenGetter from './components/TokenGetter'
 import CookieBanner from './components/CookieBanner';
 import { TokensProvider } from './contexts/tokens'
 import './App.scss'
 
 function getLibrary(provider) {
-  return new Web3(provider)
+  const library = new Web3Provider(provider)
+  library.pollingInterval = 12000
+  return library
 }
 
 const MobileErrorOverlay = () => {

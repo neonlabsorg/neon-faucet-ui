@@ -97,7 +97,8 @@ export function TokensProvider({ children = undefined }) {
 
   const updateTokenList = (availableTokens = []) => {
     setPending(true)
-    import('token-list/tokenlist.json').then(({ tokens }) => {
+
+    fetch('token-list/tokenlist.json').then(({ tokens }) => {
       mergeTokenList(tokens, availableTokens)
     }).catch((err) => {
       setError(`Failed to fetch neon transfer token list: ${err.message}`)

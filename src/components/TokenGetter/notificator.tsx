@@ -1,7 +1,7 @@
 import { useMemo, useState } from 'react'
-import { ReactComponent as SuccessIcon } from '../../assets/success.svg'
-import { ReactComponent as ErrorIcon } from '../../assets/error.svg'
-import { ReactComponent as CrossIcon } from '../../assets/cross.svg'
+import SuccessIcon from '@/assets/success.svg'
+import ErrorIcon from '@/assets/error.svg'
+import CrossIcon from '@/assets/cross.svg'
 
 export const Notificator = (data) => {
   const {
