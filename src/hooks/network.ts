@@ -1,4 +1,4 @@
-import { useWeb3React } from '@web3-react/core'
+import { useWeb3React as useWeb3ReactCore } from '@web3-react/core'
 import { useMemo } from 'react'
 
 export const ChainId = {
@@ -9,20 +9,20 @@ export const ChainId = {
   245022934: 'mainnet-beta'
 }
 
-// export function useNetworkType() {
-//   const { connector, isActive } = useWeb3React()
-//   const { network, chainId } = useMemo(() => {
-//     let network = '',
-//       chainId = Number(connector.provider)
-//     if (isActive) {
-//       network =
-//         library?.currentProvider && connector.provider.networkVersion
-//           ? ChainId[library.currentProvider.networkVersion]
-//           : 'disconnected'
-//     } else {
-//       network = 'disconnected'
-//     }
-//     return { network, chainId }
-//   }, [isActive, library?.currentProvider])
-//   return { network, chainId }
-// }
+export function useNetworkType() {
+  const { library, active } = useWeb3ReactCore()
+  const { network, chainId } = useMemo(() => {
+    let network = '',
+      chainId = Number(library?.currentProvider?.networkVersion)
+    if (active) {
+      network =
+        library?.currentProvider && library.currentProvider.networkVersion
+          ? ChainId[library.currentProvider.networkVersion]
+          : 'disconnected'
+    } else {
+      network = 'disconnected'
+    }
+    return { network, chainId }
+  }, [active, library?.currentProvider])
+  return { network, chainId }
+}

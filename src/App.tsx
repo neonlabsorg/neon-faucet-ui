@@ -1,28 +1,18 @@
 import { Web3ReactProvider } from '@web3-react/core'
+import Web3 from 'web3'
 
 import { isMobile } from './config'
 import Layout from './components/common/Layout'
 import Button from './components/common/Button'
 import { ReactComponent as MobileErrorIcon } from './assets/mobile-error.svg'
 import TokenGetter from './components/TokenGetter'
-import CookieBanner from './components/CookieBanner'
+import CookieBanner from './components/CookieBanner';
 import { TokensProvider } from './contexts/tokens'
-import { Web3ReactHooks } from '@web3-react/core'
-
-import {
-  network,
-  metaMask,
-  walletConnect,
-  networkHooks,
-  metaMaskHooks,
-  walletConnectHooks
-} from './connectors'
-
-import type { MetaMask } from '@web3-react/metamask'
-import type { Network } from '@web3-react/network'
-import type { WalletConnect } from '@web3-react/walletconnect'
-
 import './App.scss'
+
+function getLibrary(provider) {
+  return new Web3(provider)
+}
 
 const MobileErrorOverlay = () => {
   return (
@@ -49,13 +39,7 @@ const MobileErrorOverlay = () => {
   )
 }
 
-const connectors: [WalletConnect | MetaMask | Network, Web3ReactHooks][] = [
-  [metaMask, metaMaskHooks],
-  [walletConnect, walletConnectHooks],
-  [network, networkHooks]
-]
-
-export default function App() {
+function App() {
   if (isMobile())
     return (
       <Layout className='flex flex-col w-full relative'>
@@ -64,11 +48,9 @@ export default function App() {
     )
 
   return (
-    // @ts-ignore
-    <Web3ReactProvider connectors={[connectors]}>
+    <Web3ReactProvider getLibrary={getLibrary}>
       <Layout className='flex flex-col w-full relative'>
         <TokensProvider>
-          {/* @ts-ignore */}
           <TokenGetter />
         </TokensProvider>
         <CookieBanner />
@@ -76,3 +58,5 @@ export default function App() {
     </Web3ReactProvider>
   )
 }
+
+export default App
