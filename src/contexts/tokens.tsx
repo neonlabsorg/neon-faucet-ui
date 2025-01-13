@@ -1,12 +1,13 @@
 import { useWeb3React } from '@web3-react/core'
 import { createContext, useContext, useEffect, useMemo, useState } from 'react'
-import { useNetworkType } from '../hooks'
 import ERC20_ABI from '../hooks/abi/erc20.json'
 import { NEON_TOKEN_MINT, NEON_TOKEN_MINT_DECIMALS } from 'neon-portal/src/constants'
 import { CHAIN_IDS } from '../connectors'
 import { usePrevious } from '../utils'
 import { useHttp } from '../utils/useHttp'
 import { FAUCET_URL } from '../config'
+
+import { WalletContext } from './wallets'
 
 export const TokensContext = createContext({
   list: [],
@@ -31,8 +32,9 @@ const NEON_TOKEN_MODEL = {
 
 export function TokensProvider({ children = undefined }) {
   const { get } = useHttp()
-  const { chainId } = useNetworkType()
-  const neonChain = useMemo(() => chainId === CHAIN_IDS.devnet, [chainId])
+
+  const { connectedWallet, currentProvider } = useContext(WalletContext)
+  const neonChain = useMemo(() => currentProvider && Number(currentProvider.networkVersion) === CHAIN_IDS.devnet, [currentProvider])
   const initialTokenListState = useMemo(() => {
     if(neonChain) { //Due to the issue with invisible native tokens in other chains
       return Object.keys(CHAIN_IDS).map((key) => {
@@ -57,9 +59,13 @@ export function TokensProvider({ children = undefined }) {
   }
 
   const filteringChainId = useMemo(() => {
-    if (Number.isNaN(chainId)) return CHAIN_IDS['devnet']
-    return chainId
-  }, [chainId])
+    if (currentProvider) {
+      if (currentProvider && Number.isNaN(currentProvider.networkVersion)) {
+        return CHAIN_IDS['devnet']
+      }
+      return Number(currentProvider.networkVersion)
+    }
+  }, [currentProvider])
 
   const getEthBalance = async (token) => {
     if (token.address_spl === NEON_TOKEN_MINT) {
@@ -98,15 +104,19 @@ export function TokensProvider({ children = undefined }) {
   const updateTokenList = (availableTokens = []) => {
     setPending(true)
 
-    fetch('token-list/tokenlist.json').then(({ tokens }) => {
-      mergeTokenList(tokens, availableTokens)
-    }).catch((err) => {
-      setError(`Failed to fetch neon transfer token list: ${err.message}`)
-    }).finally(() => setPending(false))
+    fetch('../../node_modules/token-list/tokenlist.json')
+      .then((response) => response.json())
+      .then(({tokens}) => {
+        mergeTokenList(tokens, availableTokens)
+      })
+      .catch((err) => {
+        setError(`Failed to fetch neon transfer token list: ${err.message}`)
+      })
+      .finally(() => setPending(false))
   }
 
   useEffect(() => {
-    if (!prevAccountState && account && account.length) {
+    if (connectedWallet && !!connectedWallet.length) {
       get(`${FAUCET_URL}/request_erc20_list`).then(({ data }) => {
         updateTokenList(data)
       })
@@ -117,7 +127,7 @@ export function TokensProvider({ children = undefined }) {
       setBalances({})
     }
     // eslint-disable-next-line
-  }, [account])
+  }, [connectedWallet])
 
   return (
     <TokensContext.Provider

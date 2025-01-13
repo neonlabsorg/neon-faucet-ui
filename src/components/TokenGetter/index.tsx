@@ -1,19 +1,18 @@
-import { UnsupportedChainIdError, useWeb3React } from '@web3-react/core'
-import { useRef, useState } from 'react'
+import { useRef, useState, useContext } from 'react'
 import Form from './form'
-import { injected } from '../../connectors'
 import Button from '../common/Button'
-import Warning from '@/assets/warning.svg'
 import { Notificator } from './notificator'
 import { REQUEST_LIMIT_SEC } from '../../config'
 import web3 from 'web3'
+import { WalletContext } from '../../contexts/wallets'
 
 export default function TokenGetter() {
-  const { activate, error, active } = useWeb3React()
   const [response, setResponse] = useState(null)
   const [waiting, setWaiting] = useState(false)
   const responseTimeout = useRef(null)
 
+  const { connectedWallet, injectedProviders, handleConnectWallet } = useContext(WalletContext)
+  
   const updateResponse = (resp) => {
     setResponse(resp)
     setWaiting(true)
@@ -23,14 +22,8 @@ export default function TokenGetter() {
     }, REQUEST_LIMIT_SEC * 1000)
   }
 
-  async function connect() {
-    try {
-      await activate(injected)
-    } catch (ex) {
-      console.log(ex)
-    }
-  }
-
+  
+  // TODO: use this if we have unsupported network error
   async function switchNetwork() {
     const chainId = web3.utils.toHex(245022926)
     const chainName = 'Neon (Devnet)'
@@ -58,7 +51,7 @@ export default function TokenGetter() {
   }
 
   const renderByAccountState = () => {
-    if (active)
+    if (connectedWallet)
       return (
         <Form
           waiting={waiting}
@@ -67,50 +60,7 @@ export default function TokenGetter() {
           onResponse={updateResponse}
         />
       )
-    else if (error) {
-      if (error instanceof UnsupportedChainIdError) {
-        return (
-          <div className='flex flex-col px-6'>
-            <div className='flex items-center'>
-              <div className='w-12 h-12 flex items-center justify-center mr-4'>
-                <Warning />
-              </div>
-              <div className='flex flex-col'>
-                <div className='text-xl font-bold mb-1'>
-                  Your wallet is not connected to the NEON EVM Devnet
-                </div>
-                <div>
-                  Please select the appropriate network and try again
-                </div>
-              </div>
-            </div>
-            <div className='pl-16 pt-6 flex flex-wrap'>
-              <Button className='mr-4' layoutTheme='dark' onClick={switchNetwork}>
-                Switch To Neon
-              </Button>
-              <Button transparent layoutTheme='dark' onClick={() => window.location.reload()}>
-                Reload page
-              </Button>
-            </div>
-          </div>
-        )
-      } else {
-        return (
-          <div className='flex items-center'>
-            <div className='w-12 h-12 flex items-center justify-center mr-6'>
-              <Warning />
-            </div>
-            <div className='mr-6 text-xl font-bold'>
-              Check is your metamask wallet
-              <br /> installed on Chrome as extension.
-            </div>
-            <Button transparent layoutTheme='dark' onClick={() => window.location.reload()}>
-              Reload page
-            </Button>
-          </div>
-        )
-      }
-    } else {
+    else {
       return (
         <div className='flex flex-col px-6 items-start'>
           <div
@@ -120,9 +70,14 @@ export default function TokenGetter() {
               <div className='text-xl font-bold'>{`Let's get started:`}</div>
               <div>{`Connect your wallet`}</div>
             </div>
-            <Button layoutTheme='dark' onClick={connect}>
-              Connect Wallet
-            </Button>
+            <div className='flex gap-4'>
+              {!!injectedProviders.size && Object.values(Object.fromEntries(injectedProviders.entries())).map(wallet => (
+                <Button key={wallet.info.rdns} layoutTheme='dark' onClick={() => { handleConnectWallet(wallet)}}>
+                  {`Connect ${wallet.info.name}`}
+                </Button>
+              ))}
+            </div>
+            
           </div>
         </div>
       )

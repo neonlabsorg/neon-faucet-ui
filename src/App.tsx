@@ -1,6 +1,3 @@
-import { Web3ReactProvider } from '@web3-react/core'
-import { Web3Provider } from '@ethersproject/providers'
-
 import { isMobile } from './config'
 import Layout from './components/common/Layout'
 import Button from './components/common/Button'
@@ -8,13 +5,8 @@ import MobileErrorIcon from '@/assets/mobile-error.svg'
 import TokenGetter from './components/TokenGetter'
 import CookieBanner from './components/CookieBanner';
 import { TokensProvider } from './contexts/tokens'
+import { WalletProvider } from './contexts/wallets'
 import './App.scss'
-
-function getLibrary(provider) {
-  const library = new Web3Provider(provider)
-  library.pollingInterval = 12000
-  return library
-}
 
 const MobileErrorOverlay = () => {
   return (
@@ -50,14 +42,14 @@ function App() {
     )
 
   return (
-    <Web3ReactProvider getLibrary={getLibrary}>
-      <Layout className='flex flex-col w-full relative'>
+    <WalletProvider>
+       <Layout className='flex flex-col w-full relative'>
         <TokensProvider>
           <TokenGetter />
         </TokensProvider>
         <CookieBanner />
       </Layout>
-    </Web3ReactProvider>
+    </WalletProvider>
   )
 }
 

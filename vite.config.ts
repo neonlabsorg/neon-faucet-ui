@@ -16,7 +16,7 @@ const config = defineConfig({
     commonjs(),
     svgr({
       include: [
-        'src/**/*.svg',
+        'src/assets/**/*.svg',
       ],
     }),
   ],

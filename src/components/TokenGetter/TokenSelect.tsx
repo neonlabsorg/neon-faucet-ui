@@ -4,10 +4,10 @@ import { Loader } from '../common/Loader'
 import stub from '../../assets/no_symbol.svg'
 import DdIcon from '../../assets/dropdown.svg'
 import { useOnClickOutside } from '../../hooks'
-import neonTokenIcon from '../../assets/tokens/neon_token_md.png'
-import wNeonTokenIcon from '../../assets/tokens/wrapped-neon-logo.svg'
-import usdcTokenIcon from '../../assets/tokens/usd-coin-usdc-logo.svg'
-import usdtTokenIcon from '../../assets/tokens/tether-usdt-logo.svg'
+import neonTokenIcon from '@/assets/tokens/neon_token_md.png'
+import wNeonTokenIcon from '@/assets/tokens/wrapped-neon-logo.svg?react'
+import usdcTokenIcon from '@/assets/tokens/usd-coin-usdc-logo.svg?react'
+import usdtTokenIcon from '@/assets/tokens/tether-usdt-logo.svg?react'
 
 const icons = {
   USDT: usdtTokenIcon,
@@ -60,6 +60,7 @@ const TokenRow = (data: any) => {
   } = data
   const { balances } = useTokensContext()
 
+  debugger
   return (
     <div className={`flex px-4 py-2 justify-between dark:text-white hover:bg-dark-hover-inputs cursor-pointer`}
          onClick={onClick}>
