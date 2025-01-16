@@ -1,5 +1,6 @@
 import { createContext, useEffect, useState } from 'react'
-import { EIP6963EventNames, SupportedWallets } from '../config'
+import { CHAIN_IDS } from '../connectors'
+import { EIP6963EventNames, SupportedWallets, addChain } from '../config'
 
 import type { 
     EIP1193Provider,
@@ -36,7 +37,25 @@ export const WalletProvider = ({ children }) => {
 
     const connectNetwork = async (provider: EIP1193Provider) => {
         const account = await provider.request({ method: 'eth_requestAccounts' })
-
+        const neonNetwork = CHAIN_IDS.devnet
+        
+        try {
+            const chainInfo = {
+              chainName: 'Neon EVM (Devnet)',
+              nativeCurrency: {
+                name: 'NEON',
+                symbol: 'NEON',
+                decimals: 18
+              },
+              chainId: `0x${neonNetwork.toString(16)}`,
+              rpcUrls: ['https://devnet.neonevm.org'],
+              blockExplorerUrls: ['https://devnet.neonscan.org']
+            }
+    
+            await addChain(chainInfo, provider)
+        } catch(e) {
+            console.log(e)
+        }
         setConnectedWallet(account)
     }
 

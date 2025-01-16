@@ -32,9 +32,9 @@ export enum SupportedChainIds {
 
 export enum SupportedWallets {
   METAMASK = 'io.metamask',
-  // RABBY = 'io.rabby',
-  // TRUST = 'com.trustwallet.app',
-  // MATH = 'com.mathglobal.mathwallet'
+  RABBY = 'io.rabby',
+  TRUST = 'com.trustwallet.app',
+  MATH = 'com.mathglobal.mathwallet'
 }
 export function isSupportedChain(
   chainId: number | null | undefined

@@ -1,9 +1,9 @@
-import { useWeb3React } from '@web3-react/core'
+import { BrowserProvider, Contract } from 'ethers'
+import { Big } from 'big.js';
 import { createContext, useContext, useEffect, useMemo, useState } from 'react'
 import ERC20_ABI from '../hooks/abi/erc20.json'
 import { NEON_TOKEN_MINT, NEON_TOKEN_MINT_DECIMALS } from 'neon-portal/src/constants'
 import { CHAIN_IDS } from '../connectors'
-import { usePrevious } from '../utils'
 import { useHttp } from '../utils/useHttp'
 import { FAUCET_URL } from '../config'
 
@@ -46,8 +46,6 @@ export function TokensProvider({ children = undefined }) {
     }
     return []
   }, [neonChain])
-  const { library, account } = useWeb3React()
-  const prevAccountState = usePrevious()
   const [list, setTokenList] = useState(initialTokenListState)
   const [pending, setPending] = useState(false)
   const [error, setError] = useState('')
@@ -69,20 +67,31 @@ export function TokensProvider({ children = undefined }) {
 
   const getEthBalance = async (token) => {
     if (token.address_spl === NEON_TOKEN_MINT) {
-      const balance = await library.eth.getBalance(account)
-      return +(balance / Math.pow(10, token.decimals)).toFixed(4)
+      try {
+        const balance = await currentProvider.request({
+          method: "eth_getBalance",
+          params: [connectedWallet[0], "latest"],
+        })
+
+        return +(balance / Math.pow(10, token.decimals)).toFixed(4)
+      } catch(e) {
+        console.log(e)
+      }
     }
-    const tokenInstance = new library.eth.Contract(ERC20_ABI, token.address)
-    const balance = await tokenInstance.methods.balanceOf(account).call()
-    return balance / Math.pow(10, token.decimals)
+
+    const ethersProvider = new BrowserProvider(currentProvider)
+    const signer = await ethersProvider.getSigner()
+    const tokenContract = new Contract(token.address, ERC20_ABI, signer);
+    const balance = await tokenContract.balanceOf(signer.address)
+
+    return Number(new Big(balance).div(Math.pow(10, token.decimals)))
   }
 
   const requestListBalances = async (list) => {
     for (const item of list) {
       let balance
       try {
-        // console.log(account)
-        if (account) {
+        if (currentProvider) {
           balance = await getEthBalance(item)
         } else {
           balance = undefined
@@ -121,7 +130,7 @@ export function TokensProvider({ children = undefined }) {
         updateTokenList(data)
       })
       // @ts-ignore
-    } else if (!account && prevAccountState && prevAccountState.length) {
+    } else {
       setTokenErrors({})
       setTokenList([])
       setBalances({})

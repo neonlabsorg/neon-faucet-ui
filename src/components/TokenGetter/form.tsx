@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useContext, useState } from 'react'
 import Button from '../common/Button'
 import { Input as NumericalInput } from '../common/NumericalInput'
 import { Loader } from '../common/Loader'
@@ -8,6 +8,7 @@ import { TokenSelect } from './TokenSelect'
 import { useHttp } from '../../utils/useHttp'
 import { CircleTimer } from '../common/CircleTimer'
 import { FAUCET_URL, REQUEST_LIMIT_SEC } from '../../config'
+import { WalletContext } from '../../contexts/wallets'
 
 export default function Form(props: any) {
   const {
@@ -20,7 +21,7 @@ export default function Form(props: any) {
   const [amount, setAmount] = useState(0)
   const [token, setToken] = useState<any>({})
   const [isMaxAmountIncreased, setIsMaxAmointIncreased] = useState(false)
-  const { account } = useWeb3React()
+  const { connectedWallet } = useContext(WalletContext)
 
   const [airdropPending, setAirdropPending] = useState(false)
 
@@ -29,8 +30,8 @@ export default function Form(props: any) {
       token.symbol === 'NEON' ? `${FAUCET_URL}/request_neon` : `${FAUCET_URL}/request_erc20`
 
     const data =
-      token.symbol === 'NEON' ? { amount, wallet: account } :
-        { amount, wallet: account, token_addr: token.address }
+      token.symbol === 'NEON' ? { amount, wallet: connectedWallet[0] } :
+        { amount, wallet: connectedWallet[0], token_addr: token.address }
     setAirdropPending(true)
     post(url, data)
       .then(() => {

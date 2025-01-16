@@ -60,7 +60,6 @@ const TokenRow = (data: any) => {
   } = data
   const { balances } = useTokensContext()
 
-  debugger
   return (
     <div className={`flex px-4 py-2 justify-between dark:text-white hover:bg-dark-hover-inputs cursor-pointer`}
          onClick={onClick}>
