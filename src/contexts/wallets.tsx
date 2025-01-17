@@ -12,7 +12,9 @@ export const WalletContext = createContext({
     connectedWallet: null,
     injectedProviders: new Map(),
     currentProvider: null,
-    handleConnectWallet: (rdns: string) => {}
+    notification: '',
+    handleConnectWallet: (rdns: string) => {},
+    setNotification: (message: string) => {}
 })
 
 export const WalletProvider = ({ children }) => {
@@ -20,6 +22,7 @@ export const WalletProvider = ({ children }) => {
     const [supportedProviders, setSupportedProviders] = useState<Map<string, EIP1193Provider> | null>(new Map())
     const [connectedWallet, setConnectedWallet] = useState(null)
     const [currentProvider, setCurrentProvider] = useState(null)
+    const [notification, setNotification] = useState(null)
 
     const onAnnounceProvider = (event: EIP6963AnnounceProviderEvent) => {
         const { icon, rdns, uuid, name } = event.detail.info
@@ -37,25 +40,33 @@ export const WalletProvider = ({ children }) => {
 
     const connectNetwork = async (provider: EIP1193Provider) => {
         const account = await provider.request({ method: 'eth_requestAccounts' })
-        const neonNetwork = CHAIN_IDS.devnet
+        const chainId = await provider.request({ method: 'eth_chainId' })
         
-        try {
-            const chainInfo = {
-              chainName: 'Neon EVM (Devnet)',
-              nativeCurrency: {
-                name: 'NEON',
-                symbol: 'NEON',
-                decimals: 18
-              },
-              chainId: `0x${neonNetwork.toString(16)}`,
-              rpcUrls: ['https://devnet.neonevm.org'],
-              blockExplorerUrls: ['https://devnet.neonscan.org']
+        const neonNetwork = CHAIN_IDS.devnet
+        const responseNetwork = Number(chainId)
+
+        if (responseNetwork !== neonNetwork) {
+            try {
+                const chainInfo = {
+                  chainName: 'Neon EVM (Devnet)',
+                  nativeCurrency: {
+                    name: 'NEON',
+                    symbol: 'NEON',
+                    decimals: 18
+                  },
+                  chainId: `0x${neonNetwork.toString(16)}`,
+                  rpcUrls: ['https://devnet.neonevm.org'],
+                  blockExplorerUrls: ['https://devnet.neonscan.org']
+                }
+        
+                await addChain(chainInfo, provider)
+            } catch(e) {
+                console.log(e)
             }
-    
-            await addChain(chainInfo, provider)
-        } catch(e) {
-            console.log(e)
+        } else {
+            setNotification('Network already exists!')
         }
+        
         setConnectedWallet(account)
     }
 
@@ -78,7 +89,7 @@ export const WalletProvider = ({ children }) => {
         }
     }, [])
     return (
-        <WalletContext.Provider value={{ connectedWallet, currentProvider, handleConnectWallet, injectedProviders }}>
+        <WalletContext.Provider value={{ connectedWallet, currentProvider, handleConnectWallet, injectedProviders, notification, setNotification }}>
             {children}
         </WalletContext.Provider>
     )

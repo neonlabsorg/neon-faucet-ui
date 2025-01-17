@@ -14,7 +14,7 @@ export const Notificator = (data) => {
 
   const tokenName = useMemo(() => {
     const token = data.response.token
-    return `Add ${token.symbol} to MetaMask`
+    return token ? `Add ${token.symbol} to MetaMask` : ''
   }, [data.response.token])
 
   const showButton = useMemo(() => {
@@ -52,9 +52,11 @@ export const Notificator = (data) => {
           <div className='flex flex-row items-center'>
             <div className='flex flex-col'>
               <h2 className='font-bold'>{response.details}</h2>
-              <p className='text-sm'>
-                {'For security reasons, please wait a minute before making a new request'}
-              </p>
+              {!!tokenName && (
+                <p className='text-sm'>
+                  {'For security reasons, please wait a minute before making a new request'}
+                </p>
+              )}
             </div>
           </div>
           {showButton ? <div className='ml-4'>

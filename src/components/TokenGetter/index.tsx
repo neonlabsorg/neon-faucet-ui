@@ -10,7 +10,7 @@ export default function TokenGetter() {
   const [waiting, setWaiting] = useState(false)
   const responseTimeout = useRef(null)
 
-  const { connectedWallet, injectedProviders, handleConnectWallet } = useContext(WalletContext)
+  const { notification, connectedWallet, injectedProviders, handleConnectWallet, setNotification } = useContext(WalletContext)
   
   const updateResponse = (resp) => {
     setResponse(resp)
@@ -66,6 +66,14 @@ export default function TokenGetter() {
       <div className={`w-full flex-grow flex flex-col justify-center margin-header`}>
         <div className='w-full max-w-1040px mx-auto'>{renderByAccountState()}</div>
       </div>
+      {!!notification && (
+        <div className='absolute bottom-0 left-0 right-0'>
+          <Notificator
+            response={{ success: true, details: notification, token: null }}
+            onClose={() => setNotification('')}
+          />
+        </div>
+      )}
       {response?.details ? (
         <div className='absolute bottom-0 left-0 right-0'>
           <Notificator
