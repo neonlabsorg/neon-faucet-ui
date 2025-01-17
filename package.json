@@ -79,5 +79,8 @@
     "**/*.{js,ts,tsx,css}": [
       "yarn lint:fix"
     ]
+  },
+  "volta": {
+    "node": "20.14.0"
   }
 }

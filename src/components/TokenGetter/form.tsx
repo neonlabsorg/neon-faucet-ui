@@ -44,7 +44,7 @@ export default function Form(props: any) {
       .catch((err: AxiosError) => {
         const status = err.response.status
 
-        if (status === 502) {
+        if (status === 502 || status === 524) {
           try {
             deactivate()
           } catch (error) {
@@ -53,9 +53,11 @@ export default function Form(props: any) {
         }
 
         const details =
-          err.response && err.response.statusText ?
-            err.response.statusText :
-            'Server is not responding'
+          status === 524
+            ? 'The airdrop is taking longer than expected. Please check your tokens later.'
+            : err.response?.statusText
+              ? err.response.statusText
+              : 'Server is not responding';
         onResponse({
           success: false,
           details,
