@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from 'react'
+import { useCallback, useState } from 'react'
 
 export function escapeRegExp(string = '') {
   return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
@@ -7,14 +7,6 @@ export function escapeRegExp(string = '') {
 export function shortenAddress(address = '', chars = 4) {
   if (!address.length) return ''
   return `${address.substring(0, chars + 2)}...${address.substring(42 - chars)}`
-}
-
-export function usePrevious(value?: any) {
-  const ref = useRef()
-  useEffect(() => {
-    ref.current = value
-  }, [value])
-  return ref.current
 }
 
 export function useLocalStorageState(key = '', defaultState = '') {

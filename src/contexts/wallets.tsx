@@ -1,4 +1,4 @@
-import { createContext, useEffect, useState } from 'react'
+import { createContext, useCallback, useEffect, useState } from 'react'
 import { CHAIN_IDS } from '../connectors'
 import { EIP6963EventNames, SupportedWallets, addChain } from '../config'
 
@@ -33,19 +33,22 @@ export const WalletProvider = ({ children }) => {
     const [currentProvider, setCurrentProvider] = useState<EIP1193Provider | null>(null)
     const [notification, setNotification] = useState<string>('')
 
-    const onAnnounceProvider = (event: EIP6963AnnounceProviderEvent) => {
-        const { icon, rdns, uuid, name } = event.detail.info
+    const onAnnounceProvider = useCallback(
+      (event: EIP6963AnnounceProviderEvent) => {
+        const { icon, rdns, uuid, name } = event.detail.info;
 
         if (!icon || !rdns || !uuid || !name) {
-            console.error('Error: invalid eip6963 provider info received!')
-            return
+          console.error('Error: invalid eip6963 provider info received!');
+          return;
         }
 
         if (Object.values(SupportedWallets).includes(rdns as SupportedWallets)) {
-            setInjectedProviders(new Map(injectedProviders.set(rdns, event.detail)))
-            setSupportedProviders(new Map(supportedProviders.set(rdns, event.detail.provider)))
+          setInjectedProviders(new Map(injectedProviders.set(rdns, event.detail)));
+          setSupportedProviders(new Map(supportedProviders.set(rdns, event.detail.provider)));
         }
-    }
+      },
+      [injectedProviders, supportedProviders, setInjectedProviders, setSupportedProviders]
+    );
 
     const connectNetwork = async (provider: EIP1193Provider) => {
       try {
