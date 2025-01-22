@@ -13,11 +13,7 @@ export const TokensContext = createContext({
   list: [],
   tokenErrors: {},
   pending: false,
-  tokenManagerOpened: false,
-  setTokenManagerOpened: () => {
-  },
-  updateTokenList: () => {
-  }
+  tokenManagerOpened: false
 })
 
 const NEON_TOKEN_MODEL = {
@@ -34,7 +30,24 @@ export function TokensProvider({ children = undefined }) {
   const { get } = useHttp()
 
   const { connectedWallet, currentProvider } = useContext(WalletContext)
-  const neonChain = useMemo(() => currentProvider && Number(currentProvider.networkVersion) === CHAIN_IDS.devnet, [currentProvider])
+  const [neonChain, setNeonChain] = useState<number>(0)
+
+  useEffect(() => {
+    const getChainId = async () => {
+      if (currentProvider) {
+        try {
+          const providerNetworkId = await currentProvider.request({ method: 'eth_chainId' });
+          if (Number(providerNetworkId) === CHAIN_IDS.devnet) setNeonChain(Number(providerNetworkId));
+        } catch (error) {
+          console.error('Error fetching chain ID:', error)
+          setNeonChain(0)
+        }
+      }
+    };
+
+    getChainId()
+  }, [currentProvider])
+
   const initialTokenListState = useMemo(() => {
     if(neonChain) { //Due to the issue with invisible native tokens in other chains
       return Object.keys(CHAIN_IDS).map((key) => {
@@ -58,22 +71,25 @@ export function TokensProvider({ children = undefined }) {
 
   const filteringChainId = useMemo(() => {
     if (currentProvider) {
-      if (currentProvider && Number.isNaN(currentProvider.networkVersion)) {
+      if (currentProvider && Number.isNaN(neonChain)) {
         return CHAIN_IDS['devnet']
       }
-      return Number(currentProvider.networkVersion)
+      return Number(neonChain)
     }
-  }, [currentProvider])
+  }, [currentProvider, neonChain])
 
-  const getEthBalance = async (token) => {
+  const getEthBalance = async (token): Promise<number> => {
     if (token.address_spl === NEON_TOKEN_MINT) {
       try {
-        const balance = await currentProvider.request({
+        const balanceHex = await currentProvider.request({
           method: "eth_getBalance",
-          params: [connectedWallet[0], "latest"],
-        })
+          params: [connectedWallet, "latest"],
+        }) as string
 
-        return +(balance / Math.pow(10, token.decimals)).toFixed(4)
+        const balanceWei = BigInt(balanceHex);
+        const balance = Number(balanceWei) / Math.pow(10, token.decimals);
+
+        return +balance.toFixed(4);
       } catch(e) {
         console.log(e)
       }
@@ -105,7 +121,7 @@ export function TokensProvider({ children = undefined }) {
 
   const mergeTokenList = async (source = [], availableTokens = []) => {
     const fullList = [...initialTokenListState].concat(source.filter((item) => availableTokens.includes(item.address)))
-    const newList = neonChain ? fullList.filter((item) => item.chainId === filteringChainId) : fullList.map((item) => { return { ...item, chainId: chainId }})
+    const newList = neonChain ? fullList.filter((item) => item.chainId === filteringChainId) : fullList.map((item) => { return { ...item, chainId: neonChain }})
     setTokenList(newList)
     await requestListBalances(newList)
   }
@@ -125,7 +141,7 @@ export function TokensProvider({ children = undefined }) {
   }
 
   useEffect(() => {
-    if (connectedWallet && !!connectedWallet.length) {
+    if (connectedWallet) {
       get(`${FAUCET_URL}/request_erc20_list`).then(({ data }) => {
         updateTokenList(data)
       })

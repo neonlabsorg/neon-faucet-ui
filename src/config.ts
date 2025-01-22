@@ -36,15 +36,11 @@ export enum SupportedWallets {
   TRUST = 'com.trustwallet.app',
   MATH = 'com.mathglobal.mathwallet'
 }
-export function isSupportedChain(
-  chainId: number | null | undefined
-): chainId is SupportedChainIds {
-  if (!chainId) return false
-  return !!SupportedChainIds[chainId]
-}
+
 export function isSupportedWallet(provider: Map<string, EIP6963ProviderDetail>): boolean {
   return provider.has(SupportedWallets.METAMASK)
 }
+
 export const addChain = async (chainInfo: NetworkConfig, provider: EIP1193Provider) => {
   await provider.request({
     method: "wallet_addEthereumChain",

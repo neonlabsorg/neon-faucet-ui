@@ -4,7 +4,7 @@ export type EIP6963ProviderInfo = {
     icon: string
     rdns: string
 }
-  
+
 export type EIP1193Provider = {
     request: (payload: { method: string; params?: unknown[] | object }) => Promise<unknown>
 }
@@ -25,7 +25,7 @@ export type EIP6963ProviderDetail = {
     info: EIP6963ProviderInfo
     provider: EIP1193Provider
 }
-  
+
 export type EIP6963AnnounceProviderEvent = Event & {
     detail: EIP6963ProviderDetail
 }
@@ -41,3 +41,4 @@ export type NetworkConfig = {
     rpcUrls: string[]
     blockExplorerUrls: string[]
 }
+

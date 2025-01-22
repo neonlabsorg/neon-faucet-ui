@@ -30,8 +30,8 @@ export default function Form(props: any) {
       token.symbol === 'NEON' ? `${FAUCET_URL}/request_neon` : `${FAUCET_URL}/request_erc20`
 
     const data =
-      token.symbol === 'NEON' ? { amount, wallet: connectedWallet[0] } :
-        { amount, wallet: connectedWallet[0], token_addr: token.address }
+      token.symbol === 'NEON' ? { amount, wallet: connectedWallet } :
+        { amount, wallet: connectedWallet, token_addr: token.address }
     setAirdropPending(true)
     post(url, data)
       .then(() => {
@@ -42,9 +42,9 @@ export default function Form(props: any) {
         })
       })
       .catch((err: AxiosError) => {
-        const status = err.response.status
+        const status = err.response?.status
 
-        if (status === 502 || status === 524) {
+        if (status >= 500) {
           try {
             deactivate()
           } catch (error) {

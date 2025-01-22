@@ -14,7 +14,7 @@ export const Notificator = (data) => {
 
   const tokenName = useMemo(() => {
     const token = data.response.token
-    return token ? `Add ${token.symbol} to MetaMask` : ''
+    return token ? `Add ${token.symbol} to the wallet` : ''
   }, [data.response.token])
 
   const showButton = useMemo(() => {

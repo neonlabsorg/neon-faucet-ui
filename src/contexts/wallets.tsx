@@ -2,75 +2,83 @@ import { createContext, useEffect, useState } from 'react'
 import { CHAIN_IDS } from '../connectors'
 import { EIP6963EventNames, SupportedWallets, addChain } from '../config'
 
-import type { 
+import type {
     EIP1193Provider,
     EIP6963ProviderDetail,
-    EIP6963AnnounceProviderEvent 
+    EIP6963AnnounceProviderEvent
 } from '../types'
 
-export const WalletContext = createContext({
-    connectedWallet: null,
+interface WalletContextType {
+  connectedWallet: string;
+  injectedProviders: Map<string, EIP6963ProviderDetail>;
+  currentProvider: EIP1193Provider | null;
+  notification: string;
+  handleConnectWallet: (wallet: EIP6963ProviderDetail) => void;
+  setNotification: (message: string) => void;
+}
+
+export const WalletContext = createContext<WalletContextType>({
+    connectedWallet: '',
     injectedProviders: new Map(),
     currentProvider: null,
     notification: '',
-    handleConnectWallet: (rdns: string) => {},
+    handleConnectWallet: (wallet: EIP6963ProviderDetail) => {},
     setNotification: (message: string) => {}
 })
 
 export const WalletProvider = ({ children }) => {
     const [injectedProviders, setInjectedProviders] = useState<Map<string, EIP6963ProviderDetail> | null>(new Map())
     const [supportedProviders, setSupportedProviders] = useState<Map<string, EIP1193Provider> | null>(new Map())
-    const [connectedWallet, setConnectedWallet] = useState(null)
-    const [currentProvider, setCurrentProvider] = useState(null)
-    const [notification, setNotification] = useState(null)
+    const [connectedWallet, setConnectedWallet] = useState<string>('')
+    const [currentProvider, setCurrentProvider] = useState<EIP1193Provider | null>(null)
+    const [notification, setNotification] = useState<string>('')
 
     const onAnnounceProvider = (event: EIP6963AnnounceProviderEvent) => {
         const { icon, rdns, uuid, name } = event.detail.info
-        
+
         if (!icon || !rdns || !uuid || !name) {
             console.error('Error: invalid eip6963 provider info received!')
             return
         }
 
-        if (Object.values(SupportedWallets).includes(rdns)) {
+        if (Object.values(SupportedWallets).includes(rdns as SupportedWallets)) {
             setInjectedProviders(new Map(injectedProviders.set(rdns, event.detail)))
             setSupportedProviders(new Map(supportedProviders.set(rdns, event.detail.provider)))
         }
     }
 
     const connectNetwork = async (provider: EIP1193Provider) => {
-        const account = await provider.request({ method: 'eth_requestAccounts' })
+      try {
+        const accounts = await provider.request({ method: 'eth_requestAccounts' }) as string[]
         const chainId = await provider.request({ method: 'eth_chainId' })
-        
+
         const neonNetwork = CHAIN_IDS.devnet
         const responseNetwork = Number(chainId)
 
-        if (responseNetwork !== neonNetwork) {
-            try {
-                const chainInfo = {
-                  chainName: 'Neon EVM (Devnet)',
-                  nativeCurrency: {
-                    name: 'NEON',
-                    symbol: 'NEON',
-                    decimals: 18
-                  },
-                  chainId: `0x${neonNetwork.toString(16)}`,
-                  rpcUrls: ['https://devnet.neonevm.org'],
-                  blockExplorerUrls: ['https://devnet.neonscan.org']
-                }
-        
-                await addChain(chainInfo, provider)
-            } catch(e) {
-                console.log(e)
+        if (accounts.length && responseNetwork !== neonNetwork) {
+            const chainInfo = {
+              chainName: 'Neon EVM (Devnet)',
+              nativeCurrency: {
+                name: 'NEON',
+                symbol: 'NEON',
+                decimals: 18
+              },
+              chainId: `0x${neonNetwork.toString(16)}`,
+              rpcUrls: ['https://devnet.neonevm.org'],
+              blockExplorerUrls: ['https://devnet.neonscan.org']
             }
-        } else {
-            setNotification('Network already exists!')
+
+            await addChain(chainInfo, provider)
         }
-        
-        setConnectedWallet(account)
+
+        setConnectedWallet(accounts[0])
+      } catch (e) {
+        console.error(e)
+        setNotification('Failed to connect to the NEON network')
+      }
     }
 
-    const handleConnectWallet = (wallet: unknown): void => {
+    const handleConnectWallet = (wallet: EIP6963ProviderDetail): void => {
         setCurrentProvider(wallet.provider)
         connectNetwork(supportedProviders.get(wallet.info.rdns))!
     }
@@ -82,7 +90,7 @@ export const WalletProvider = ({ children }) => {
         * Wallets code that had run earlier
         */
         window.dispatchEvent(new Event(EIP6963EventNames.Request));
-    
+
         return () => {
             setInjectedProviders(null)
             window.removeEventListener(EIP6963EventNames.Announce, onAnnounceProvider)

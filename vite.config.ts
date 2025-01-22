@@ -10,15 +10,15 @@ import sass from 'sass'
 const config = defineConfig({
   base: './',
   plugins: [
-    react(),
-    vitetsConfigPaths(),
-    nodePolyfills({ include: ['fs', 'stream', 'buffer', 'util', 'http', 'https'] }),
-    commonjs(),
     svgr({
       include: [
         'src/assets/**/*.svg',
       ],
     }),
+    react(),
+    vitetsConfigPaths(),
+    nodePolyfills({ include: ['fs', 'stream', 'buffer', 'util', 'http', 'https'] }),
+    commonjs()
   ],
   css: {
     preprocessorOptions: {
