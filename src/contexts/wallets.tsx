@@ -15,6 +15,7 @@ interface WalletContextType {
   notification: string;
   handleConnectWallet: (wallet: EIP6963ProviderDetail) => void;
   setNotification: (message: string) => void;
+  disconnectWallet: () => void;
 }
 
 export const WalletContext = createContext<WalletContextType>({
@@ -23,7 +24,8 @@ export const WalletContext = createContext<WalletContextType>({
     currentProvider: null,
     notification: '',
     handleConnectWallet: (wallet: EIP6963ProviderDetail) => {},
-    setNotification: (message: string) => {}
+    setNotification: (message: string) => {},
+    disconnectWallet: () => {}
 })
 
 export const WalletProvider = ({ children }) => {
@@ -85,6 +87,7 @@ export const WalletProvider = ({ children }) => {
         setCurrentProvider(wallet.provider)
         connectNetwork(supportedProviders.get(wallet.info.rdns))!
     }
+
     useEffect(() => {
         window.addEventListener(EIP6963EventNames.Announce, onAnnounceProvider);
         /*
@@ -99,8 +102,14 @@ export const WalletProvider = ({ children }) => {
             window.removeEventListener(EIP6963EventNames.Announce, onAnnounceProvider)
         }
     }, [])
+
+    const disconnectWallet = () => {
+        setCurrentProvider(null)
+        setConnectedWallet('')
+    }
+
     return (
-        <WalletContext.Provider value={{ connectedWallet, currentProvider, handleConnectWallet, injectedProviders, notification, setNotification }}>
+        <WalletContext.Provider value={{ connectedWallet, currentProvider, handleConnectWallet, injectedProviders, notification, setNotification, disconnectWallet }}>
             {children}
         </WalletContext.Provider>
     )

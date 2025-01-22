@@ -2,7 +2,6 @@ import { useContext, useState } from 'react'
 import Button from '../common/Button'
 import { Input as NumericalInput } from '../common/NumericalInput'
 import { Loader } from '../common/Loader'
-import { useWeb3React } from '@web3-react/core'
 import { AxiosError } from 'axios'
 import { TokenSelect } from './TokenSelect'
 import { useHttp } from '../../utils/useHttp'
@@ -17,7 +16,6 @@ export default function Form(props: any) {
     }
   } = props
   const { post } = useHttp()
-  const { deactivate } = useWeb3React()
   const [amount, setAmount] = useState(0)
   const [token, setToken] = useState<any>({})
   const [isMaxAmountIncreased, setIsMaxAmointIncreased] = useState(false)
@@ -43,14 +41,6 @@ export default function Form(props: any) {
       })
       .catch((err: AxiosError) => {
         const status = err.response?.status
-
-        if (status >= 500) {
-          try {
-            deactivate()
-          } catch (error) {
-            console.error(error)
-          }
-        }
 
         const details =
           status === 524
