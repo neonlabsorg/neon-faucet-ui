@@ -129,15 +129,14 @@ export function TokensProvider({ children = undefined }) {
   const updateTokenList = (availableTokens = []) => {
     setPending(true)
 
-    fetch('../../node_modules/token-list/tokenlist.json')
-      .then((response) => response.json())
-      .then(({tokens}) => {
-        mergeTokenList(tokens, availableTokens)
+    import('token-list/tokenlist.json')
+      .then((module) => {
+        mergeTokenList(module.tokens, availableTokens);
       })
       .catch((err) => {
-        setError(`Failed to fetch neon transfer token list: ${err.message}`)
+        setError(`Failed to fetch neon transfer token list: ${err.message}`);
       })
-      .finally(() => setPending(false))
+      .finally(() => setPending(false));
   }
 
   useEffect(() => {

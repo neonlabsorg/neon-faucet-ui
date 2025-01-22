@@ -6,6 +6,7 @@ import svgr from 'vite-plugin-svgr';
 import { nodePolyfills } from 'vite-plugin-node-polyfills'
 import vitetsConfigPaths from 'vite-tsconfig-paths';
 import sass from 'sass'
+import dynamicImport from 'vite-plugin-dynamic-import'
 
 const config = defineConfig({
   base: './',
@@ -16,6 +17,7 @@ const config = defineConfig({
       ],
     }),
     react(),
+    dynamicImport(),
     vitetsConfigPaths(),
     nodePolyfills({ include: ['fs', 'stream', 'buffer', 'util', 'http', 'https'] }),
     commonjs()
@@ -32,6 +34,7 @@ const config = defineConfig({
   resolve: {
     alias: {
      '@': path.resolve(__dirname, './src'),
+      'token-list': '/node_modules/token-list',
     //   screens: path.resolve(__dirname, './src/screens'),
     },
   },
