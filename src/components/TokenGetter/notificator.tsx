@@ -20,12 +20,12 @@ export const Notificator = (
   const tokenName = useMemo(() => {
     const { token } = response
     return token ? `Add ${token.symbol} to the wallet` : ''
-  }, [response.token])
+  }, [response])
 
   const showButton = useMemo(() => {
     const { token } = response
     return provider && token && token.symbol !== 'NEON' && !added
-  }, [response.token, added, provider])
+  }, [response, added, provider])
 
   async function addToken() {
     const { token } = response

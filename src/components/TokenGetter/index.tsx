@@ -66,7 +66,7 @@ export default function TokenGetter() {
         </div>
       )
     }
-  }, [connectedWallet, injectedProviders, handleConnectWallet])
+  }, [connectedWallet, injectedProviders, handleConnectWallet, response, updateResponse, waiting])
 
   return (
     <>
