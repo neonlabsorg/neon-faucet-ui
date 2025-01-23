@@ -1,6 +1,6 @@
 import Bowser from 'bowser'
 
-import type {EIP1193Provider, NetworkConfig, EIP6963ProviderDetail} from './types'
+import type {EIP1193Provider, NetworkConfig, EIP6963ProviderDetail} from '../types'
 
 export const FAUCET_URL = 'https://api.neonfaucet.org'
 
@@ -40,10 +40,3 @@ export enum SupportedWallets {
 export function isSupportedWallet(provider: Map<string, EIP6963ProviderDetail>): boolean {
   return provider.has(SupportedWallets.METAMASK)
 }
-
-export const addChain = async (chainInfo: NetworkConfig, provider: EIP1193Provider) => {
-  await provider.request({
-    method: "wallet_addEthereumChain",
-    params: [chainInfo],
-  })
-};

@@ -1,4 +1,4 @@
-import { isMobile } from './config'
+import { isMobile } from './utils'
 import Layout from './components/common/Layout'
 import Button from './components/common/Button'
 import MobileErrorIcon from '@/assets/mobile-error.svg'

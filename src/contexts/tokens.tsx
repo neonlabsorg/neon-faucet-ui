@@ -2,10 +2,7 @@ import { BrowserProvider, Contract } from 'ethers'
 import { Big } from 'big.js';
 import { createContext, useContext, useEffect, useMemo, useState } from 'react'
 import ERC20_ABI from '../hooks/abi/erc20.json'
-import { NEON_TOKEN_MINT, NEON_TOKEN_MINT_DECIMALS } from 'neon-portal/src/constants'
-import { CHAIN_IDS } from '../connectors'
-import { useHttp } from '../utils/useHttp'
-import { FAUCET_URL } from '../config'
+import {CHAIN_IDS, FAUCET_URL, NEON_TOKEN_MINT, NEON_TOKEN_MODEL, SPLToken, useHttp} from '../utils'
 
 import { WalletContext } from './wallets'
 
@@ -15,16 +12,6 @@ export const TokensContext = createContext({
   pending: false,
   tokenManagerOpened: false
 })
-
-const NEON_TOKEN_MODEL = {
-  chainId: 0,
-  address_spl: NEON_TOKEN_MINT,
-  address: '',
-  decimals: NEON_TOKEN_MINT_DECIMALS,
-  name: 'Neon',
-  symbol: 'NEON',
-  logoURI: 'https://raw.githubusercontent.com/neonlabsorg/token-list/main/neon_token_md.png'
-}
 
 export function TokensProvider({ children = undefined }) {
   const { get } = useHttp()
@@ -48,7 +35,7 @@ export function TokensProvider({ children = undefined }) {
     getChainId()
   }, [currentProvider])
 
-  const initialTokenListState = useMemo(() => {
+  const initialTokenListState = useMemo((): SPLToken[] => {
     if(neonChain) { //Due to the issue with invisible native tokens in other chains
       return Object.keys(CHAIN_IDS).map((key) => {
         const chainId = CHAIN_IDS[key]
@@ -59,12 +46,12 @@ export function TokensProvider({ children = undefined }) {
     }
     return []
   }, [neonChain])
-  const [list, setTokenList] = useState(initialTokenListState)
-  const [pending, setPending] = useState(false)
+  const [list, setTokenList] = useState<SPLToken[]>(initialTokenListState)
+  const [pending, setPending] = useState<boolean>(false)
   const [error, setError] = useState('')
   const [tokenErrors, setTokenErrors] = useState({})
-  const [balances, setBalances] = useState({})
-  const addBalance = (symbol, balance) => {
+  const [balances, setBalances] = useState<Record<string, any>>({})
+  const addBalance = (symbol: string, balance: any) => {
     balances[symbol] = balance
     setBalances({ ...balances })
   }
@@ -78,7 +65,7 @@ export function TokensProvider({ children = undefined }) {
     }
   }, [currentProvider, neonChain])
 
-  const getEthBalance = async (token): Promise<number> => {
+  const getEthBalance = async (token: SPLToken): Promise<number> => {
     if (token.address_spl === NEON_TOKEN_MINT) {
       try {
         const balanceHex = await currentProvider.request({
@@ -103,7 +90,7 @@ export function TokensProvider({ children = undefined }) {
     return Number(new Big(balance).div(Math.pow(10, token.decimals)))
   }
 
-  const requestListBalances = async (list) => {
+  const requestListBalances = async (list: SPLToken[]) => {
     for (const item of list) {
       let balance
       try {

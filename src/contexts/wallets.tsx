@@ -1,6 +1,5 @@
 import { createContext, useCallback, useEffect, useState } from 'react'
-import { CHAIN_IDS } from '../connectors'
-import { EIP6963EventNames, SupportedWallets, addChain } from '../config'
+import { CHAIN_IDS, EIP6963EventNames, SupportedWallets, addChain } from '../utils'
 
 import type {
     EIP1193Provider,
@@ -8,13 +7,15 @@ import type {
     EIP6963AnnounceProviderEvent
 } from '../types'
 
+import type { NotificatorData } from '../components/TokenGetter/types'
+
 interface WalletContextType {
   connectedWallet: string;
   injectedProviders: Map<string, EIP6963ProviderDetail>;
   currentProvider: EIP1193Provider | null;
-  notification: string;
+  notification: NotificatorData | null;
+  setNotification: (data: NotificatorData | null) => void;
   handleConnectWallet: (wallet: EIP6963ProviderDetail) => void;
-  setNotification: (message: string) => void;
   disconnectWallet: () => void;
 }
 
@@ -22,9 +23,9 @@ export const WalletContext = createContext<WalletContextType>({
     connectedWallet: '',
     injectedProviders: new Map(),
     currentProvider: null,
-    notification: '',
+    notification: null,
+    setNotification: () => {},
     handleConnectWallet: (wallet: EIP6963ProviderDetail) => {},
-    setNotification: (message: string) => {},
     disconnectWallet: () => {}
 })
 
@@ -33,7 +34,7 @@ export const WalletProvider = ({ children }) => {
     const [supportedProviders, setSupportedProviders] = useState<Map<string, EIP1193Provider> | null>(new Map())
     const [connectedWallet, setConnectedWallet] = useState<string>('')
     const [currentProvider, setCurrentProvider] = useState<EIP1193Provider | null>(null)
-    const [notification, setNotification] = useState<string>('')
+    const [notification, setNotification] = useState<NotificatorData | null>(null)
 
     const onAnnounceProvider = useCallback(
       (event: EIP6963AnnounceProviderEvent) => {
@@ -59,7 +60,6 @@ export const WalletProvider = ({ children }) => {
 
         const neonNetwork = CHAIN_IDS.devnet
         const responseNetwork = Number(chainId)
-
         if (accounts.length && responseNetwork !== neonNetwork) {
             const chainInfo = {
               chainName: 'Neon EVM (Devnet)',
@@ -79,7 +79,7 @@ export const WalletProvider = ({ children }) => {
         setConnectedWallet(accounts[0])
       } catch (e) {
         console.error(e)
-        setNotification('Failed to connect to the NEON network')
+        setNotification({ success: false, details: 'Failed to connect to the NEON network' })
       }
     }
 

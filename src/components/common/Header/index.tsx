@@ -1,6 +1,6 @@
 import { useContext } from 'react'
 import Logo from '@/assets/logo.svg'
-import { isMobile } from '../../../config'
+import { isMobile } from '../../../utils'
 import { WalletContext } from "../../../contexts/wallets";
 
 export const Header = () => {

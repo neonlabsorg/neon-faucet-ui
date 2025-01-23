@@ -4,9 +4,8 @@ import { Input as NumericalInput } from '../common/NumericalInput'
 import { Loader } from '../common/Loader'
 import { AxiosError } from 'axios'
 import { TokenSelect } from './TokenSelect'
-import { useHttp } from '../../utils/useHttp'
 import { CircleTimer } from '../common/CircleTimer'
-import { FAUCET_URL, REQUEST_LIMIT_SEC } from '../../config'
+import { FAUCET_URL, REQUEST_LIMIT_SEC, useHttp } from '../../utils'
 import { WalletContext } from '../../contexts/wallets'
 
 export default function Form(props: any) {
