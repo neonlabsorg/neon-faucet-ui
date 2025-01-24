@@ -19,6 +19,7 @@
   },
   "include": [
     "src",
-    "src/setupTests.js"
+    "src/setupTests.js",
+    "vite-env.d.ts"
   ],
 }

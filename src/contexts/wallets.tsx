@@ -1,12 +1,6 @@
 import { createContext, useCallback, useEffect, useState } from 'react'
 import { CHAIN_IDS, EIP6963EventNames, SupportedWallets, addChain } from '../utils'
 
-import type {
-    EIP1193Provider,
-    EIP6963ProviderDetail,
-    EIP6963AnnounceProviderEvent
-} from '../types'
-
 import type { NotificatorData } from '../components/TokenGetter/types'
 
 interface WalletContextType {

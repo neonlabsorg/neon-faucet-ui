@@ -1,7 +1,5 @@
 import Bowser from 'bowser'
 
-import type {EIP1193Provider, NetworkConfig, EIP6963ProviderDetail} from '../types'
-
 export const FAUCET_URL = 'https://api.neonfaucet.org'
 
 export const REQUEST_LIMIT_SEC = 60

@@ -1,4 +1,3 @@
-import type {EIP1193Provider, NetworkConfig} from "../types";
 import { SPLToken } from "./models";
 
 export const addChain = async (chainInfo: NetworkConfig, provider: EIP1193Provider) => {

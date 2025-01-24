@@ -3,7 +3,6 @@ import SuccessIcon from '@/assets/success.svg'
 import ErrorIcon from '@/assets/error.svg'
 import CrossIcon from '@/assets/cross.svg'
 import { addTokenToWallet } from "../../utils"
-import type { EIP1193Provider } from "../../types"
 import { NotificatorData } from "./types"
 
 export const Notificator = (
