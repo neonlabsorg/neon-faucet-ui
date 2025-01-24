@@ -1,7 +1,7 @@
 import { useTokensContext } from '../../contexts/tokens'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { Loader } from '../common/Loader'
-import stub from '../../assets/no_symbol.svg?url'
+import stub from '@/assets/no_symbol.svg?url'
 import DdIcon from '@/assets/dropdown.svg'
 import { useOnClickOutside } from '../../hooks'
 import neonTokenIcon from '@/assets/tokens/neon_token_md.png'
