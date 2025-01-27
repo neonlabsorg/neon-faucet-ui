@@ -1,20 +1,18 @@
-import { ReactComponent as Logo } from '@/assets/logo.svg'
-import { useWeb3React } from '@web3-react/core'
-import { isMobile } from '../../../config'
+import { useContext } from 'react'
+import Logo from '@/assets/logo.svg'
+import { isMobile } from '../../../utils'
+import { WalletContext } from "../../../contexts/wallets";
 
 export const Header = () => {
-  const { deactivate, active } = useWeb3React()
+  const { connectedWallet, disconnectWallet } = useContext(WalletContext)
 
   async function disconnect() {
-    try {
-      deactivate()
-    } catch (ex) {
-      console.log(ex)
-    }
+    disconnectWallet()
   }
 
-  return <div className='w-full p-6 flex justify-between items-center relative z-10'>
-    <div onClick={disconnect} className={active ? 'cursor-pointer' : null}>
+  return (
+    <div className='w-full p-6 flex justify-between items-center relative z-10'>
+    <div onClick={disconnect} className={connectedWallet ? 'cursor-pointer' : ''}>
       <Logo />
     </div>
     {!isMobile() && (
@@ -37,4 +35,5 @@ export const Header = () => {
       </div>
     )}
   </div>
+  )
 }

@@ -1,18 +1,12 @@
-import { Web3ReactProvider } from '@web3-react/core'
-import Web3 from 'web3'
-
-import { isMobile } from './config'
+import { isMobile } from './utils'
 import Layout from './components/common/Layout'
 import Button from './components/common/Button'
-import { ReactComponent as MobileErrorIcon } from './assets/mobile-error.svg'
+import MobileErrorIcon from '@/assets/mobile-error.svg'
 import TokenGetter from './components/TokenGetter'
 import CookieBanner from './components/CookieBanner';
 import { TokensProvider } from './contexts/tokens'
+import { WalletProvider } from './contexts/wallets'
 import './App.scss'
-
-function getLibrary(provider) {
-  return new Web3(provider)
-}
 
 const MobileErrorOverlay = () => {
   return (
@@ -48,14 +42,14 @@ function App() {
     )
 
   return (
-    <Web3ReactProvider getLibrary={getLibrary}>
-      <Layout className='flex flex-col w-full relative'>
+    <WalletProvider>
+       <Layout className='flex flex-col w-full relative'>
         <TokensProvider>
           <TokenGetter />
         </TokensProvider>
         <CookieBanner />
       </Layout>
-    </Web3ReactProvider>
+    </WalletProvider>
   )
 }
 

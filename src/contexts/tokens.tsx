@@ -1,39 +1,41 @@
-import { useWeb3React } from '@web3-react/core'
+import { BrowserProvider, Contract } from 'ethers'
+import { Big } from 'big.js';
 import { createContext, useContext, useEffect, useMemo, useState } from 'react'
-import { useNetworkType } from '../hooks'
 import ERC20_ABI from '../hooks/abi/erc20.json'
-import { NEON_TOKEN_MINT, NEON_TOKEN_MINT_DECIMALS } from 'neon-portal/src/constants'
-import { CHAIN_IDS } from '../connectors'
-import { usePrevious } from '../utils'
-import { useHttp } from '../utils/useHttp'
-import { FAUCET_URL } from '../config'
+import {CHAIN_IDS, FAUCET_URL, NEON_TOKEN_MINT, NEON_TOKEN_MODEL, SPLToken, useHttp} from '../utils'
+
+import { WalletContext } from './wallets'
 
 export const TokensContext = createContext({
   list: [],
   tokenErrors: {},
   pending: false,
-  tokenManagerOpened: false,
-  setTokenManagerOpened: () => {
-  },
-  updateTokenList: () => {
-  }
+  tokenManagerOpened: false
 })
-
-const NEON_TOKEN_MODEL = {
-  chainId: 0,
-  address_spl: NEON_TOKEN_MINT,
-  address: '',
-  decimals: NEON_TOKEN_MINT_DECIMALS,
-  name: 'Neon',
-  symbol: 'NEON',
-  logoURI: 'https://raw.githubusercontent.com/neonlabsorg/token-list/main/neon_token_md.png'
-}
 
 export function TokensProvider({ children = undefined }) {
   const { get } = useHttp()
-  const { chainId } = useNetworkType()
-  const neonChain = useMemo(() => chainId === CHAIN_IDS.devnet, [chainId])
-  const initialTokenListState = useMemo(() => {
+
+  const { connectedWallet, currentProvider } = useContext(WalletContext)
+  const [neonChain, setNeonChain] = useState<number>(0)
+
+  useEffect(() => {
+    const getChainId = async () => {
+      if (currentProvider) {
+        try {
+          const providerNetworkId = await currentProvider.request({ method: 'eth_chainId' });
+          if (Number(providerNetworkId) === CHAIN_IDS.devnet) setNeonChain(Number(providerNetworkId));
+        } catch (error) {
+          console.error('Error fetching chain ID:', error)
+          setNeonChain(0)
+        }
+      }
+    };
+
+    getChainId()
+  }, [currentProvider])
+
+  const initialTokenListState = useMemo((): SPLToken[] => {
     if(neonChain) { //Due to the issue with invisible native tokens in other chains
       return Object.keys(CHAIN_IDS).map((key) => {
         const chainId = CHAIN_IDS[key]
@@ -44,39 +46,55 @@ export function TokensProvider({ children = undefined }) {
     }
     return []
   }, [neonChain])
-  const { library, account } = useWeb3React()
-  const prevAccountState = usePrevious()
-  const [list, setTokenList] = useState(initialTokenListState)
-  const [pending, setPending] = useState(false)
+  const [list, setTokenList] = useState<SPLToken[]>(initialTokenListState)
+  const [pending, setPending] = useState<boolean>(false)
   const [error, setError] = useState('')
   const [tokenErrors, setTokenErrors] = useState({})
-  const [balances, setBalances] = useState({})
-  const addBalance = (symbol, balance) => {
+  const [balances, setBalances] = useState<Record<string, any>>({})
+  const addBalance = (symbol: string, balance: any) => {
     balances[symbol] = balance
     setBalances({ ...balances })
   }
 
   const filteringChainId = useMemo(() => {
-    if (Number.isNaN(chainId)) return CHAIN_IDS['devnet']
-    return chainId
-  }, [chainId])
-
-  const getEthBalance = async (token) => {
-    if (token.address_spl === NEON_TOKEN_MINT) {
-      const balance = await library.eth.getBalance(account)
-      return +(balance / Math.pow(10, token.decimals)).toFixed(4)
+    if (currentProvider) {
+      if (currentProvider && Number.isNaN(neonChain)) {
+        return CHAIN_IDS['devnet']
+      }
+      return Number(neonChain)
     }
-    const tokenInstance = new library.eth.Contract(ERC20_ABI, token.address)
-    const balance = await tokenInstance.methods.balanceOf(account).call()
-    return balance / Math.pow(10, token.decimals)
+  }, [currentProvider, neonChain])
+
+  const getEthBalance = async (token: SPLToken): Promise<number> => {
+    if (token.address_spl === NEON_TOKEN_MINT) {
+      try {
+        const balanceHex = await currentProvider.request({
+          method: "eth_getBalance",
+          params: [connectedWallet, "latest"],
+        }) as string
+
+        const balanceWei = BigInt(balanceHex);
+        const balance = Number(balanceWei) / Math.pow(10, token.decimals);
+
+        return +balance.toFixed(4);
+      } catch(e) {
+        console.log(e)
+      }
+    }
+
+    const ethersProvider = new BrowserProvider(currentProvider)
+    const signer = await ethersProvider.getSigner()
+    const tokenContract = new Contract(token.address, ERC20_ABI, signer);
+    const balance = await tokenContract.balanceOf(signer.address)
+
+    return Number(new Big(balance).div(Math.pow(10, token.decimals)))
   }
 
-  const requestListBalances = async (list) => {
+  const requestListBalances = async (list: SPLToken[]) => {
     for (const item of list) {
       let balance
       try {
-        // console.log(account)
-        if (account) {
+        if (currentProvider) {
           balance = await getEthBalance(item)
         } else {
           balance = undefined
@@ -90,33 +108,37 @@ export function TokensProvider({ children = undefined }) {
 
   const mergeTokenList = async (source = [], availableTokens = []) => {
     const fullList = [...initialTokenListState].concat(source.filter((item) => availableTokens.includes(item.address)))
-    const newList = neonChain ? fullList.filter((item) => item.chainId === filteringChainId) : fullList.map((item) => { return { ...item, chainId: chainId }})
+    const newList = neonChain ? fullList.filter((item) => item.chainId === filteringChainId) : fullList.map((item) => { return { ...item, chainId: neonChain }})
     setTokenList(newList)
     await requestListBalances(newList)
   }
 
   const updateTokenList = (availableTokens = []) => {
     setPending(true)
-    import('token-list/tokenlist.json').then(({ tokens }) => {
-      mergeTokenList(tokens, availableTokens)
-    }).catch((err) => {
-      setError(`Failed to fetch neon transfer token list: ${err.message}`)
-    }).finally(() => setPending(false))
+
+    import('token-list/tokenlist.json')
+      .then((module) => {
+        mergeTokenList(module.tokens, availableTokens);
+      })
+      .catch((err) => {
+        setError(`Failed to fetch neon transfer token list: ${err.message}`);
+      })
+      .finally(() => setPending(false));
   }
 
   useEffect(() => {
-    if (!prevAccountState && account && account.length) {
+    if (connectedWallet) {
       get(`${FAUCET_URL}/request_erc20_list`).then(({ data }) => {
         updateTokenList(data)
       })
       // @ts-ignore
-    } else if (!account && prevAccountState && prevAccountState.length) {
+    } else {
       setTokenErrors({})
       setTokenList([])
       setBalances({})
     }
     // eslint-disable-next-line
-  }, [account])
+  }, [connectedWallet])
 
   return (
     <TokensContext.Provider

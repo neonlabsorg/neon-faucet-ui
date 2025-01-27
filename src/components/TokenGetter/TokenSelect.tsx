@@ -1,13 +1,13 @@
 import { useTokensContext } from '../../contexts/tokens'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { Loader } from '../common/Loader'
-import stub from '../../assets/no_symbol.svg'
-import { ReactComponent as DdIcon } from '../../assets/dropdown.svg'
+import stub from '@/assets/no_symbol.svg?url'
+import DdIcon from '@/assets/dropdown.svg'
 import { useOnClickOutside } from '../../hooks'
-import neonTokenIcon from '../../assets/tokens/neon_token_md.png'
-import wNeonTokenIcon from '../../assets/tokens/wrapped-neon-logo.svg'
-import usdcTokenIcon from '../../assets/tokens/usd-coin-usdc-logo.svg'
-import usdtTokenIcon from '../../assets/tokens/tether-usdt-logo.svg'
+import neonTokenIcon from '@/assets/tokens/neon_token_md.png'
+import wNeonTokenIcon from '@/assets/tokens/wrapped-neon-logo.svg?react'
+import usdcTokenIcon from '@/assets/tokens/usd-coin-usdc-logo.svg?react'
+import usdtTokenIcon from '@/assets/tokens/tether-usdt-logo.svg?react'
 
 const icons = {
   USDT: usdtTokenIcon,
@@ -102,11 +102,10 @@ export const TokenSelect = (props: any) => {
 
   const isSPLToken = ({ name, symbol, address, address_spl }) => {
     const fs = searchQuery.toLowerCase()
-
-    return name.toLowerCase().includes(fs) ||
-      symbol.toLowerCase().includes(fs) ||
-      address.toLowerCase() === fs ||
-      address_spl.toLowerCase() === fs
+    return name?.toLowerCase().includes(fs) ||
+      symbol?.toLowerCase().includes(fs) ||
+      address?.toLowerCase() === fs ||
+      address_spl?.toLowerCase() === fs
   }
 
   const filteredList = useMemo(() => {
