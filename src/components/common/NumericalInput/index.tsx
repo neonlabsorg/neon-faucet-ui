@@ -1,6 +1,13 @@
 import React, { useEffect, useState } from 'react'
 
-export const Input = React.memo<any>(function InnerInput(props) {
+interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
+  value: string | number;
+  onUserInput: (value: string) => void;
+  error?: boolean;
+  token: { decimals: number };
+}
+
+export const Input = React.memo<InputProps>(function InnerInput(props) {
   const {
     value,
     onUserInput,

@@ -1,13 +1,12 @@
-import { useState } from 'react'
+import { useContext, useState } from 'react'
 import Button from '../common/Button'
 import { Input as NumericalInput } from '../common/NumericalInput'
 import { Loader } from '../common/Loader'
-import { useWeb3React } from '@web3-react/core'
 import { AxiosError } from 'axios'
 import { TokenSelect } from './TokenSelect'
-import { useHttp } from '../../utils/useHttp'
 import { CircleTimer } from '../common/CircleTimer'
-import { FAUCET_URL, REQUEST_LIMIT_SEC } from '../../config'
+import { FAUCET_URL, REQUEST_LIMIT_SEC, useHttp } from '../../utils'
+import { WalletContext } from '../../contexts/wallets'
 
 export default function Form(props: any) {
   const {
@@ -16,11 +15,10 @@ export default function Form(props: any) {
     }
   } = props
   const { post } = useHttp()
-  const { deactivate } = useWeb3React()
   const [amount, setAmount] = useState(0)
   const [token, setToken] = useState<any>({})
   const [isMaxAmountIncreased, setIsMaxAmointIncreased] = useState(false)
-  const { account } = useWeb3React()
+  const { connectedWallet } = useContext(WalletContext)
 
   const [airdropPending, setAirdropPending] = useState(false)
 
@@ -29,8 +27,8 @@ export default function Form(props: any) {
       token.symbol === 'NEON' ? `${FAUCET_URL}/request_neon` : `${FAUCET_URL}/request_erc20`
 
     const data =
-      token.symbol === 'NEON' ? { amount, wallet: account } :
-        { amount, wallet: account, token_addr: token.address }
+      token.symbol === 'NEON' ? { amount, wallet: connectedWallet } :
+        { amount, wallet: connectedWallet, token_addr: token.address }
     setAirdropPending(true)
     post(url, data)
       .then(() => {
@@ -41,20 +39,14 @@ export default function Form(props: any) {
         })
       })
       .catch((err: AxiosError) => {
-        const status = err.response.status
-
-        if (status === 502) {
-          try {
-            deactivate()
-          } catch (error) {
-            console.error(error)
-          }
-        }
+        const status = err.response?.status
 
         const details =
-          err.response && err.response.statusText ?
-            err.response.statusText :
-            'Server is not responding'
+          status === 524
+            ? 'The airdrop is taking longer than expected. Please check your tokens later.'
+            : err.response?.statusText
+              ? err.response.statusText
+              : 'Server is not responding';
         onResponse({
           success: false,
           details,

@@ -1,80 +1,89 @@
 import { useMemo, useState } from 'react'
-import { ReactComponent as SuccessIcon } from '../../assets/success.svg'
-import { ReactComponent as ErrorIcon } from '../../assets/error.svg'
-import { ReactComponent as CrossIcon } from '../../assets/cross.svg'
+import SuccessIcon from '@/assets/success.svg'
+import ErrorIcon from '@/assets/error.svg'
+import CrossIcon from '@/assets/cross.svg'
+import { addTokenToWallet } from "../../utils"
+import { NotificatorData } from "./types"
 
-export const Notificator = (data) => {
+export const Notificator = (
+  data: { provider: EIP1193Provider | null, response: NotificatorData, onClose: () => void }
+) => {
   const {
+    provider,
     response = { success: true, details: null, token: null },
-    onClose = () => {
-    }
+    onClose = () => {},
   } = data
   const [disabled, setDisabled] = useState(false)
   const [added, setAdded] = useState(false)
 
   const tokenName = useMemo(() => {
-    const token = data.response.token
-    return `Add ${token.symbol} to MetaMask`
-  }, [data.response.token])
+    const { token } = response
+    return token ? `Add ${token.symbol} to the wallet` : ''
+  }, [response])
 
   const showButton = useMemo(() => {
-    const token = data.response.token
-    return token && token.symbol !== 'NEON' && !added
-  }, [data.response.token, added])
+    const { token } = response
+    return provider && token && token.symbol !== 'NEON' && !added
+  }, [response, added, provider])
 
   async function addToken() {
-    const { address, symbol, decimals, logoURI: image } = data.response.token
+    const { token } = response
     try {
       setDisabled(true)
-      await window['ethereum'].request({
-        method: 'wallet_watchAsset',
-        params: { type: 'ERC20', options: { address, symbol, decimals, image } }
-      })
+      await addTokenToWallet(token, provider)
       setDisabled(false)
       setAdded(true)
     } catch (e) {
+      console.error('Error adding token:', e);
+    } finally {
+      setDisabled(false);
     }
   }
 
-  return <div
-    className={`p-3 w-full relative ${response.success === true ? 'bg-green text-black' : 'bg-error-red text-white'}`}>
+  const NotificationContent = () => (
+    <div className="flex items-center">
+      <div className="w-8 h-8 mr-4">
+        {response.success ? <SuccessIcon /> : <ErrorIcon />}
+      </div>
+      <div className="flex flex-col">
+        <h2 className="font-bold">{response.details}</h2>
+        <p className="text-sm">
+          {'For security reasons, please wait a minute before making a new request'}
+        </p>
+      </div>
+    </div>
+  );
+
+  return (
     <div
-      className='absolute top-0 bottom-0 w-6 h-6 right-6 flex items-center justify-center m-auto cursor-pointer'
-      onClick={onClose}>
-      <CrossIcon className={`${response.success === false ? 'fill-white' : 'fill-black'}`} />
-    </div>
-    <div className='max-w-1040px mx-auto'>
-      {response.success === true ?
-        <div className='pr-8 flex items-center'>
-          <div className='w-8 h-8 mr-4'>
-            <SuccessIcon />
-          </div>
-          <div className='flex flex-row items-center'>
-            <div className='flex flex-col'>
-              <h2 className='font-bold'>{response.details}</h2>
-              <p className='text-sm'>
-                {'For security reasons, please wait a minute before making a new request'}
-              </p>
+      className={`p-3 w-full relative ${
+        response.success ? 'bg-green text-black' : 'bg-error-red text-white'
+      }`}
+    >
+      <div
+        className="absolute top-0 bottom-0 w-6 h-6 right-6 flex items-center justify-center m-auto cursor-pointer"
+        onClick={onClose}
+      >
+        <CrossIcon
+          className={`${response.success ? 'fill-black' : 'fill-white'}`}
+        />
+      </div>
+      <div className="max-w-1040px mx-auto">
+        <div className="pr-8 flex items-center">
+          <NotificationContent />
+          {response.success && showButton && (
+            <div className="ml-4">
+              <button
+                className="inline-block py-2 px-5 bg-black rounded-full text-white"
+                onClick={addToken}
+                disabled={disabled}
+              >
+                {tokenName}
+              </button>
             </div>
-          </div>
-          {showButton ? <div className='ml-4'>
-            <button className='inline-block py-2 px-5 bg-black rounded-full text-white'
-                    onClick={addToken} disabled={disabled}>{tokenName}</button>
-          </div> : null}
-        </div> :
-        <div className='flex items-center'>
-          <div className='w-8 h-8 mr-4'>
-            <ErrorIcon />
-          </div>
-          <div className='flex flex-row items-center'>
-            <div className='flex flex-col'>
-              <h2 className='font-bold'>{response.details}</h2>
-              <p className='text-sm'>
-                {'For security reasons, please wait a minute before making a new request'}
-              </p>
-            </div>
-          </div>
-        </div>}
+          )}
+        </div>
+      </div>
     </div>
-  </div>
+  );
 }
