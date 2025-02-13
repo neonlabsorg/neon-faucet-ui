@@ -26,7 +26,7 @@ export const Header = () => {
            className='ml-6 text-white hover:text-green'>
           NeonPass
         </a>
-        <a href='https://docs.neonevm.org/docs/developing/utilities/faucet'
+        <a href='https://neonevm.org/docs/developing/utilities/faucet'
            rel='noopener noreferrer'
            target='_blank'
            className='ml-6 text-white hover:text-green'>

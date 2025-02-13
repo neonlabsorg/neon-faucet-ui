@@ -43,7 +43,7 @@ export default function TokenGetter() {
           <div
             className='text-2xl font-bold max-w-xl mb-12'>{`Neon's Faucet service will help you get NEON test tokens or other ERC-20 test tokens to be used for testing applications on devnet.`}</div>
           <div className='flex flex-wrap items-center'>
-            {injectedProviders.size
+            {!!injectedProviders?.size
               ? (
                 <div className='flex flex-col mr-16 mb-4 sm:mb-0'>
                   <div className='text-xl font-bold'>{`Let's get started:`}</div>
@@ -55,7 +55,7 @@ export default function TokenGetter() {
               )
             }
             <div className='grid grid-cols-2 gap-4'>
-              {!!injectedProviders.size && Object.values(Object.fromEntries(injectedProviders.entries())).map(wallet => (
+              {!!injectedProviders?.size && Object.values(Object.fromEntries(injectedProviders.entries())).map(wallet => (
                 <Button key={wallet.info.rdns} layoutTheme='dark' onClick={() => { handleConnectWallet(wallet)}}>
                   {`Connect ${wallet.info.name}`}
                 </Button>
