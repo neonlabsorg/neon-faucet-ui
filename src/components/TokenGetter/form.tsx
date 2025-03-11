@@ -93,7 +93,8 @@ export default function Form(props: any) {
             amount === 0 ||
             blocked === true ||
             airdropPending === true ||
-            (token.symbol !== 'NEON' && !token.address)
+            (token.symbol !== 'NEON' && !token.address) ||
+            waiting
           }
           onClick={() => postAirdrop()}
         >
