@@ -27,7 +27,7 @@
       </button>
       <div
         v-show="dropdownOpen"
-        class="shadow-1 absolute bg-violet-200 left-0 px-2 z-40 mt-2 w-full rounded-2xl border border-violet-100 py-[10px] transition-all text-white-200"
+        class="shadow-1 absolute bg-violet-200 left-0 px-2 z-40 mt-1 w-full rounded-2xl border border-violet-100 py-[10px] transition-all text-white-200"
         :class="{
           'top-full opacity-100 visible': dropdownOpen,
           'top-[110%] invisible opacity-0': !dropdownOpen
@@ -53,7 +53,6 @@
 </template>
 
 <script setup lang="ts">
-import { watch, ref } from 'vue'
 import { storeToRefs } from 'pinia'
 import { useTokensStore } from '@/stores'
 
@@ -79,8 +78,4 @@ const handleDropdownClose =  () => {
 const toggleDropdown = () => {
   dropdownOpen.value = !dropdownOpen.value
 }
-
-watch(tokenList, () => {
-  console.log(tokenList.value)
-})
 </script>

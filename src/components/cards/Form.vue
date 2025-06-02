@@ -38,7 +38,7 @@ const { currentToken } = storeToRefs(tokensStore)
 
 watch(tokenAmount, () => {
   if(tokenAmount.value && tokenAmount.value > TOKEN_TRANSFER_LIMIT) {
-    inputError.value = 'Limit for one airdrop is 100 tokens per minute'
+    inputError.value = 'Limit for airdrop is 100 tokens per minute'
   } else {
     inputError.value = ''
   }
