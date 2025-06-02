@@ -1,4 +1,4 @@
-export const debounce = (fn: (...args: never[]) => never, delay: number) => {
+export const debounce = (fn: (...args: never[]) => void, delay: number) => {
   let timeoutId: ReturnType<typeof setTimeout> | null = null
   return (...args: never[]) => {
     if (timeoutId) clearTimeout(timeoutId)
