@@ -1,0 +1,1 @@
+export const TOKEN_TRANSFER_LIMIT = 100

@@ -1,46 +1,25 @@
-import path from 'path';
-import { defineConfig } from 'vite';
-import react from '@vitejs/plugin-react';
-import commonjs from 'vite-plugin-commonjs';
-import svgr from 'vite-plugin-svgr';
-import { nodePolyfills } from 'vite-plugin-node-polyfills'
-import vitetsConfigPaths from 'vite-tsconfig-paths';
-import sass from 'sass'
-import dynamicImport from 'vite-plugin-dynamic-import'
+import { fileURLToPath, URL } from 'node:url'
 
-const config = defineConfig({
-  base: './',
+import { defineConfig } from 'vite'
+
+import vue from '@vitejs/plugin-vue'
+import vueJsx from '@vitejs/plugin-vue-jsx'
+import vueDevTools from 'vite-plugin-vue-devtools'
+import { nodePolyfills } from 'vite-plugin-node-polyfills'
+import tailwindcss from '@tailwindcss/vite'
+
+// https://vite.dev/config/
+export default defineConfig({
   plugins: [
-    svgr({
-      include: [
-        'src/assets/**/*.svg',
-      ],
-    }),
-    react(),
-    dynamicImport(),
-    vitetsConfigPaths(),
+    vue(),
+    vueJsx(),
+    vueDevTools(),
     nodePolyfills({ include: ['fs', 'stream', 'buffer', 'util', 'http', 'https'] }),
-    commonjs()
+    tailwindcss()
   ],
-  css: {
-    preprocessorOptions: {
-        scss: { implementation: sass }
-    }
-  },
-  server: {
-    open: true, // automatically open the app in the browser
-    port: 3000,
-  },
   resolve: {
     alias: {
-     '@': path.resolve(__dirname, './src'),
-      'token-list': '/node_modules/token-list',
-    //   screens: path.resolve(__dirname, './src/screens'),
+      '@': fileURLToPath(new URL('./src', import.meta.url))
     },
   },
-  build: {
-    outDir: 'build',
-  },
-});
-
-export default config;
+})

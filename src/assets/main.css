@@ -1,0 +1,59 @@
+@import "tailwindcss";
+
+@theme {
+    --font-main: "Inter", "Ubuntu", "Helvetica", sans-serif;
+
+    --color-green:#47CD89;
+    --color-pink: #EE46BC;
+    --color-red: #F04438;
+
+    --color-gray-100: #ECECED;
+    --color-gray-200: #CECFD2;
+    --color-gray-300: #61646C;
+    --color-gray-400: #333741;
+    --color-gray-500: #94969C;
+    --color-gray-600: #85888E;
+
+    --color-violet-100: #1F242F;
+    --color-violet-200: #161B26;
+    --color-violet-300: #0C111D;
+
+    --color-white-100: #FFF;
+    --color-white-200: #F5F5F6;
+
+    --spacing-card: 400px;
+    --spacing-menu: 240px;
+    --spacing-connector: 1px;
+}
+
+@layer base {
+    body {
+        @apply bg-violet-300 font-main;
+    }
+
+    #app {
+        @apply h-screen flex flex-col;
+    }
+
+    .gradient-card {
+        background: radial-gradient(
+                70% 70% at 50% 50%,
+                transparent 0%,
+                #0C111D 70%,
+                #0C111D 100%
+        ), url('/public/icons/lines-background.svg');
+    }
+
+    input:-webkit-autofill,
+    input:-webkit-autofill:hover,
+    input:-webkit-autofill:focus,
+    input:-webkit-autofill:active {
+        /* Revert text color */
+        -webkit-text-fill-color: white !important;
+        color: white !important;
+        caret-color: white !important;
+
+        /* Revert background color */
+        transition: background-color 5000s ease-in-out 0s;
+    }
+}

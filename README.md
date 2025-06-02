@@ -1,26 +1,39 @@
-# Neon Faucet
+# neon-faucet-ui
 
-[![workflow status](https://github.com/neonlabsorg/neon-faucet-ui/actions/workflows/update_qa_stand.yml/badge.svg?branch=main)](https://github.com/neonlabsorg/neon-faucet-ui/actions)
+This template should help get you started developing with Vue 3 in Vite.
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app) and [Tailwind CSS](https://tailwindcss.com).
+## Recommended IDE Setup
 
-To develop an application, you will need an editor with support:
+[VSCode](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur).
 
-- [Node.js LTS](https://nodejs.org)
-- [Yarn](https://yarnpkg.com)
-- [TypeScript](https://code.visualstudio.com/docs/languages/typescript)
-- [ESLint](https://eslint.org/docs/user-guide/integrations)
-- [Prettier](https://prettier.io/docs/en/editors.html)
+## Type Support for `.vue` Imports in TS
 
-## Dev-mode
+TypeScript cannot handle type information for `.vue` imports by default, so we replace the `tsc` CLI with `vue-tsc` for type checking. In editors, we need [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) to make the TypeScript language service aware of `.vue` types.
+
+## Customize configuration
+
+See [Vite Configuration Reference](https://vite.dev/config/).
+
+## Project Setup
 
 ```sh
-yarn install
-yarn start
+yarn
 ```
 
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+### Compile and Hot-Reload for Development
 
-### Proxy
+```sh
+yarn dev
+```
 
-In the file `src/setupProxy.js` specifies the target to which API requests are proxied.
+### Type-Check, Compile and Minify for Production
+
+```sh
+yarn build
+```
+
+### Lint with [ESLint](https://eslint.org/)
+
+```sh
+yarn lint
+```
