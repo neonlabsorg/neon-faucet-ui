@@ -17,5 +17,5 @@ export const TokensApi = {
     } catch (e) {
       return { error: e }
     }
-  }
+  },
 }

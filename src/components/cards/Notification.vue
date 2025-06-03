@@ -11,9 +11,9 @@
         </div>
       </div>
       <div v-if="notification?.type === ENotificationType.error" class='w-full flex gap-6 items-center flex-col'>
-        <Error/>
-        <div class='max-w-[200px] flex flex-col items-center'>
-          <h3 class='text-white-200 text-xl font-medium'>
+        <ErrorIcon/>
+        <div class='flex flex-col items-center'>
+          <h3 class='text-white-200 text-xl text-center font-medium'>
             {{ notification.title }}
           </h3>
           <span class='text-gray-200 text-center'>{{ notification.subtitle }}</span>
@@ -23,12 +23,24 @@
     <div class="flex flex-col justify-center gap-6 py-8 px-6 bg-violet-200 rounded-b-3xl">
       <p class="text-center text-gray-500">{{ notification?.description }}</p>
       <div class="w-full">
-
+        <div v-if="notification?.type === ENotificationType.error" class="flex flex-col gap-1 text-sm font-semibold">
+          <button
+            class="w-full flex justify-center gap-1 py-2.5 px-3.5 rounded-full bg-pink text-white cursor-pointer"
+            @click="handleNavigateToForm"
+          >
+            Go to the Main Page
+          </button>
+          <button class="w-full flex justify-center items-center gap-2 py-2.5 px-3.5 rounded-full bg-violet-200 border border-gray-400 text-gray-200 cursor-pointer">
+            <DiscordIcon/>
+            Support
+          </button>
+        </div>
         <button
-          class="w-full flex justify-center items-center gap-1 py-2.5 px-3.5 rounded-full "
+          v-if="notification?.type === ENotificationType.success"
+          class="w-full flex justify-center items-center gap-1 py-2.5 px-3.5 rounded-full text-sm"
           :disabled="isButtonDisabled"
           :class="isButtonDisabled ? 'bg-violet-100 text-gray-600 cursor-not-allowed' : 'bg-pink text-white cursor-pointer'"
-          @click="handleGetMore"
+          @click="handleNavigateToForm"
         >
           <div v-if="isButtonDisabled" class="rounded-full border border-pink">
             <svg width="16" height="16">
@@ -51,7 +63,9 @@ import { storeToRefs } from 'pinia'
 
 import TransferBanner from '@/components/common/TransferBanner.vue'
 import CommonCard from '@/components/common/CommonCard.vue'
-import Error from '@/components/icons/Error.vue'
+
+import ErrorIcon from '@/components/icons/Error.vue'
+import DiscordIcon from '@/components/icons/Discord.vue'
 
 import { useCardsStore } from '@/stores'
 import { ECards, ENotificationType } from '@/stores/cards.ts'
@@ -63,7 +77,7 @@ const interval = ref()
 const cardsStore = useCardsStore()
 const { notification } = storeToRefs(cardsStore)
 
-const handleGetMore = () => {
+const handleNavigateToForm = () => {
   cardsStore.setCurrentCard(ECards.form)
 }
 

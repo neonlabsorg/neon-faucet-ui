@@ -26,10 +26,9 @@ onMounted(() => {
   setTimeout(() => {
     cardsStore.setCurrentCard(ECards.notification)
     cardsStore.setNotification({
-      type: ENotificationType.success,
-      title: 'Transfer Completed',
-      subtitle: 'There are now 50 NEON in 0x135...8F57 wallet.',
-      description: 'For security reasons, please wait a minute before making a new request'
+      type: ENotificationType.error,
+      title: 'Something went wrong',
+      description: 'Please select the appropriate Ethereum network and try connecting the wallet again or text in Support'
     })
   }, 3000)
 })
