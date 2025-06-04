@@ -82,12 +82,6 @@ export const useTokensStore = defineStore('tokens',{
         cardsStore.setCurrentCard(ECards.notification)
       } catch(e) {
         console.log(e)
-        cardsStore.setNotification({
-          type: ENotificationType.error,
-          title: 'Something went wrong',
-          description: 'Please select the appropriate Ethereum network and try connecting the wallet again or text in Support'
-        })
-        cardsStore.setCurrentCard(ECards.notification)
       }
     },
     setTokenBalance(token: Token, balance: string) {
