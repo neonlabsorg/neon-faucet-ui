@@ -8,6 +8,7 @@
       id="amount"
       class="w-full outline-none bg-violet-200"
       type="text"
+      v-input-number
       v-model.number="amount"
     />
   </div>
@@ -15,7 +16,5 @@
 
 <script setup lang="ts">
 const amount = defineModel('amount')
-defineProps({
-  inputError: String
-})
+defineProps<{ inputError: { message: string} | null }>()
 </script>

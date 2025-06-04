@@ -3,7 +3,7 @@
     <div class="w-full flex flex-col gap-1">
       <TokenSelect/>
       <AmountInput v-model:amount="tokenAmount" :inputError="inputError" />
-      <span v-if="inputError" class="text-sm text-red pl-4">{{ inputError }}</span>
+      <span v-if="inputError" class="text-sm text-red pl-4">{{ inputError.message }}</span>
     </div>
     <button
       class='w-full text-white-100 text-lg font-semibold px-6 py-3.5 rounded-full'
@@ -20,6 +20,7 @@
 import { computed, onMounted, ref, watch } from 'vue'
 import { storeToRefs } from 'pinia'
 
+import useTokenBalance from '@/composables/useTokenBalance.ts'
 import { useCardsStore, useTokensStore } from '@/stores'
 import { TOKEN_TRANSFER_LIMIT } from '@/models'
 import { ECards } from '@/stores/cards.ts'
@@ -28,32 +29,39 @@ import CommonCard from '@/components/common/CommonCard.vue'
 import TokenSelect from '@/components/common/TokenSelect.vue'
 import AmountInput from '@/components/common/AmountInput.vue'
 
-const tokenAmount = ref<number | null>(null)
-const inputError = ref<string>('')
-const buttonIsDisabled = computed(() => !(tokenAmount.value && tokenAmount.value <= TOKEN_TRANSFER_LIMIT) || !currentToken.value)
+const tokenAmount = ref<number | null >(null)
+const inputError = ref<{ message: string } | null >(null)
+const buttonIsDisabled = computed(() => !!inputError.value || !currentToken.value || !tokenAmount.value)
 
 const tokensStore = useTokensStore()
 const cardsStore = useCardsStore()
-const { currentToken } = storeToRefs(tokensStore)
+const { currentToken, tokenList } = storeToRefs(tokensStore)
+
+const { getTokensBalance } = useTokenBalance()
 
 watch(tokenAmount, () => {
   if(tokenAmount.value && tokenAmount.value > TOKEN_TRANSFER_LIMIT) {
-    inputError.value = 'Limit for airdrop is 100 tokens per minute'
+    inputError.value = { message: 'Limit for airdrop is 100 tokens per minute' }
   } else {
-    inputError.value = ''
+    inputError.value = null
   }
 })
 
 const handleSendTokens = () => {
-  if (tokenAmount.value && tokenAmount.value <= TOKEN_TRANSFER_LIMIT) {
+  if (tokenAmount.value) {
     tokensStore.setTokenAmount(tokenAmount.value)
+    tokensStore.sendAirdrop()
     cardsStore.setCurrentCard(ECards.pending)
-  } else {
-    inputError.value = 'Maximum limit for one airdrop is 100 tokens per minute'
   }
 }
 
-onMounted(() => {
-  tokensStore.getTokenList()
+onMounted(async () => {
+  await tokensStore.getFaucetTokenList()
+  await tokensStore.getTokenList()
+
+  for await (const token of tokenList.value) {
+    const balance = await getTokensBalance(token)
+    tokensStore.setTokenBalance(token, balance)
+  }
 })
 </script>

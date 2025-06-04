@@ -13,23 +13,18 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted } from 'vue'
-import { useCardsStore } from '@/stores'
 
 import CommonCard from '@/components/common/CommonCard.vue'
 import TransferBanner from '@/components/common/TransferBanner.vue'
-import { ECards, ENotificationType } from '@/stores/cards.ts'
 
-const cardsStore = useCardsStore()
-
-onMounted(() => {
-  setTimeout(() => {
-    cardsStore.setCurrentCard(ECards.notification)
-    cardsStore.setNotification({
-      type: ENotificationType.error,
-      title: 'Something went wrong',
-      description: 'Please select the appropriate Ethereum network and try connecting the wallet again or text in Support'
-    })
-  }, 3000)
-})
+// onMounted(() => {
+//   setTimeout(() => {
+//     cardsStore.setCurrentCard(ECards.notification)
+//     cardsStore.setNotification({
+//       type: ENotificationType.error,
+//       title: 'Something went wrong',
+//       description: 'Please select the appropriate Ethereum network and try connecting the wallet again or text in Support'
+//     })
+//   }, 3000)
+// })
 </script>

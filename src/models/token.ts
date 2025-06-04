@@ -3,10 +3,8 @@ export type Token = {
   address_spl: string
   chainId: number
   decimals: number
-  isDeleted: boolean
-  isValid: boolean
   logoURI: string
   name: string
-  symbol: string
-  uri: string
+  symbol: string,
+  balance?: string
 }

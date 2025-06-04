@@ -5,6 +5,13 @@ export interface NeonWallet {
 
 export const NEON = 'NEON'
 
+export interface NeonTokenBalance {
+  decimals: number;
+  formatted: string;
+  symbol: string;
+  value: bigint;
+}
+
 export const walletConnectMetadata = (websiteUrl: string) => ({
   name: 'Neon EVM Onboarding portal',
   description:

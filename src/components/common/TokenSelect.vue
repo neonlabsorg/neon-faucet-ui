@@ -40,7 +40,8 @@
               {{ item.name }}
             </div>
             <div class="flex items-center gap-2">
-              <span class="text-gray-500">1</span>
+              <span v-if='item.balance' class="text-gray-500">{{ item.balance }}</span>
+              <Loader v-else class="size-4" />
               <div class="h-5 w-5">
                 <CheckIcon  v-if="item.address === currentToken?.address" />
               </div>
@@ -61,6 +62,7 @@ import type { Token } from '@/models'
 
 import TokenIcon from '@/components/common/TokenIcon.vue'
 import CheckIcon from '@/components/icons/Check.vue'
+import Loader from '@/components/icons/Loader.vue'
 
 const dropdownOpen = ref(false)
 

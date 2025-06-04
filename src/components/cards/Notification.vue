@@ -1,6 +1,6 @@
 <template>
   <CommonCard class="px-0 pb-0">
-    <div class='w-full flex gradient-card items-center gap-6 flex-col pt-6 px-6'>
+    <div class='w-full flex gradient-card items-center gap-6 flex-col py-6 px-6'>
       <div v-if="notification?.type === ENotificationType.success" class='w-full flex gap-6 items-center flex-col'>
         <TransferBanner completed/>
         <div class='max-w-[200px] flex flex-col items-center'>
