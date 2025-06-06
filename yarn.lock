@@ -1681,6 +1681,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/big.js@npm:^6.2.2":
+  version: 6.2.2
+  resolution: "@types/big.js@npm:6.2.2"
+  checksum: 10c0/8f8472dfc1ef61c492e6841e86f8b9b97e5b024136bf7964e582a6a80ba73d4dbfd6cc23ed3b9d8fea69c7f30834fffd1c88e7fb981811f5c6ca608380b5ad67
+  languageName: node
+  linkType: hard
+
 "@types/estree@npm:1.0.7, @types/estree@npm:^1.0.6":
   version: 1.0.7
   resolution: "@types/estree@npm:1.0.7"
@@ -5450,6 +5457,7 @@ __metadata:
     "@reown/appkit-adapter-ethers": "npm:^1.7.7"
     "@tailwindcss/vite": "npm:^4.1.8"
     "@tsconfig/node22": "npm:^22.0.1"
+    "@types/big.js": "npm:^6.2.2"
     "@types/node": "npm:^22.14.0"
     "@vitejs/plugin-vue": "npm:^5.2.3"
     "@vitejs/plugin-vue-jsx": "npm:^4.1.2"

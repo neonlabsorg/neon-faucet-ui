@@ -23,6 +23,7 @@ export default () => {
 
     try {
       const provider = toRaw(connectionStore.provider)
+      //@ts-expect-error: fix this
       const signer = await provider?.getSigner();
       const tokenContract = new Contract(token.address, ERC20_ABI, signer);
 

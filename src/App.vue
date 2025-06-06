@@ -38,7 +38,9 @@ onMounted(() => {
   wcModal.value = initAppKit()
   wcModal.value?.subscribeProviders((data) => {
     if(data.eip155) {
+      //@ts-expect-error: fix this
       const provider = new BrowserProvider(data.eip155)
+      //@ts-expect-error: fix this
       connectionStore.setProvider(provider)
     }
   })

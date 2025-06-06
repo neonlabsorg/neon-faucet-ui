@@ -17,6 +17,7 @@ export const TokensApi = {
 
       return data
     } catch(e) {
+      //@ts-expect-error: fix this
       console.log(e.code)
       return { error: e }
     }
