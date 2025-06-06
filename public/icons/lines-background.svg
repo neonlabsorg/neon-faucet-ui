@@ -1,0 +1,46 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="302" height="252" viewBox="0 0 302 252" fill="none">
+  <g clip-path="url(#clip0_714_370)">
+    <g clip-path="url(#clip1_714_370)">
+      <line x1="10.4047" x2="10.4047" y2="301.5" stroke="#F670C7" stroke-width="0.209375"/>
+      <line x1="30.5047" x2="30.5047" y2="301.5" stroke="#F670C7" stroke-width="0.209375"/>
+      <line x1="50.6047" x2="50.6047" y2="301.5" stroke="#F670C7" stroke-width="0.209375"/>
+      <line x1="70.7047" x2="70.7047" y2="301.5" stroke="#F670C7" stroke-width="0.209375"/>
+      <line x1="90.8047" x2="90.8047" y2="301.5" stroke="#F670C7" stroke-width="0.209375"/>
+      <line x1="110.905" x2="110.905" y2="301.5" stroke="#F670C7" stroke-width="0.209375"/>
+      <line x1="131.005" x2="131.005" y2="301.5" stroke="#F670C7" stroke-width="0.209375"/>
+      <line x1="151.105" x2="151.105" y2="301.5" stroke="#F670C7" stroke-width="0.209375"/>
+      <line x1="171.205" x2="171.205" y2="301.5" stroke="#F670C7" stroke-width="0.209375"/>
+      <line x1="191.305" x2="191.305" y2="301.5" stroke="#F670C7" stroke-width="0.209375"/>
+      <line x1="211.405" x2="211.405" y2="301.5" stroke="#F670C7" stroke-width="0.209375"/>
+      <line x1="231.505" x2="231.505" y2="301.5" stroke="#F670C7" stroke-width="0.209375"/>
+      <line x1="251.605" x2="251.605" y2="301.5" stroke="#F670C7" stroke-width="0.209375"/>
+      <line x1="271.705" x2="271.705" y2="301.5" stroke="#F670C7" stroke-width="0.209375"/>
+      <line x1="291.805" x2="291.805" y2="301.5" stroke="#F670C7" stroke-width="0.209375"/>
+    </g>
+    <g clip-path="url(#clip2_714_370)">
+      <line x1="-50" y1="19.9954" x2="352" y2="19.9954" stroke="#F670C7" stroke-width="0.209375"/>
+      <line x1="-50" y1="40.0955" x2="352" y2="40.0955" stroke="#F670C7" stroke-width="0.209375"/>
+      <line x1="-50" y1="60.1951" x2="352" y2="60.1951" stroke="#F670C7" stroke-width="0.209375"/>
+      <line x1="-50" y1="80.2952" x2="352" y2="80.2952" stroke="#F670C7" stroke-width="0.209375"/>
+      <line x1="-50" y1="100.395" x2="352" y2="100.395" stroke="#F670C7" stroke-width="0.209375"/>
+      <line x1="-50" y1="120.495" x2="352" y2="120.495" stroke="#F670C7" stroke-width="0.209375"/>
+      <line x1="-50" y1="140.596" x2="352" y2="140.596" stroke="#F670C7" stroke-width="0.209375"/>
+      <line x1="-50" y1="160.695" x2="352" y2="160.695" stroke="#F670C7" stroke-width="0.209375"/>
+      <line x1="-50" y1="180.795" x2="352" y2="180.795" stroke="#F670C7" stroke-width="0.209375"/>
+      <line x1="-50" y1="200.895" x2="352" y2="200.895" stroke="#F670C7" stroke-width="0.209375"/>
+      <line x1="-50" y1="220.995" x2="352" y2="220.995" stroke="#F670C7" stroke-width="0.209375"/>
+      <line x1="-50" y1="241.096" x2="352" y2="241.096" stroke="#F670C7" stroke-width="0.209375"/>
+    </g>
+  </g>
+  <defs>
+    <clipPath id="clip0_714_370">
+      <rect width="402" height="301.5" fill="white" transform="translate(-50)"/>
+    </clipPath>
+    <clipPath id="clip1_714_370">
+      <rect width="402" height="301.5" fill="white" transform="translate(-50)"/>
+    </clipPath>
+    <clipPath id="clip2_714_370">
+      <rect width="402" height="301.5" fill="white" transform="translate(-50)"/>
+    </clipPath>
+  </defs>
+</svg>
