@@ -5,6 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
+    "test": "yarn lint:code && yarn lint:fix",
     "build": "run-p type-check \"build-only {@}\" --",
     "preview": "vite preview --host",
     "build-only": "vite build",
