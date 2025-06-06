@@ -17,6 +17,7 @@ export const TokensApi = {
 
       return data
     } catch(e) {
+      console.log(e.code)
       return { error: e }
     }
   },
