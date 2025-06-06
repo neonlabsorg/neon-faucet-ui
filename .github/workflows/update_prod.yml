@@ -26,7 +26,10 @@ jobs:
       - name: Tests
         run: yarn test
 
+
       - name: Build
+        env:
+          VITE_REOWN_PROJECT_ID: ${{vars.VITE_REOWN_PROJECT_ID}}
         run: yarn build
 
       - name: Deploy to s3
