@@ -1,11 +1,12 @@
 
-import useClickOutside from '@/composables/useClickOutside';
-import useNumberInputMask from '@/composables/useNumberInputMask'
 
 import { createApp } from 'vue'
 import { createPinia } from 'pinia'
-import App from './App.vue'
 
+import useClickOutside from '@/composables/useClickOutside';
+import useNumberInputMask from '@/composables/useNumberInputMask'
+
+import App from './App.vue'
 import './assets/main.css'
 
 const clickOutside = useClickOutside();

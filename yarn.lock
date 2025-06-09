@@ -5480,6 +5480,7 @@ __metadata:
     vite-plugin-node-polyfills: "npm:^0.23.0"
     vite-plugin-vue-devtools: "npm:^7.7.2"
     vue: "npm:^3.5.13"
+    vue-shared-components: "npm:^1.1.4"
     vue-tsc: "npm:^2.2.8"
   languageName: unknown
   linkType: soft
@@ -7562,6 +7563,13 @@ __metadata:
   peerDependencies:
     eslint: ^8.57.0 || ^9.0.0
   checksum: 10c0/b4a045113966a90d0b8248a9e9eb67db65e654335cedab5d8a2dd01e0d4f1d95caf4135fe9d6a2739cc8cef1ff6f4da9457ea7ba118176d5a5b6a22862661f58
+  languageName: node
+  linkType: hard
+
+"vue-shared-components@npm:^1.1.4":
+  version: 1.1.4
+  resolution: "vue-shared-components@npm:1.1.4"
+  checksum: 10c0/b59b7e788fe4b5a978585125a588da97a81814ccae340d6966124b9af852022163034ddd243e52e688e62bb4f29d7aea39c134b9d225e7551ce782290a0845ad
   languageName: node
   linkType: hard
 
