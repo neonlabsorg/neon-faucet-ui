@@ -62,13 +62,32 @@ export const useTokensStore = defineStore('tokens',{
         })
 
         if(error) {
-          cardsStore.setNotification({
-            type: ENotificationType.error,
-            title: 'Something went wrong',
-            description: 'Please select the appropriate Ethereum network and try connecting the wallet again or text in Support'
-          })
+          switch (error.code) {
+            case 429:
+              cardsStore.setNotification({
+                type: ENotificationType.error,
+                title: 'Too many requests',
+                description: 'The next request will be unlocked after a one-minute expiration for security reasons'
+              })
+              break
+            case 504:
+              cardsStore.setNotification({
+                type: ENotificationType.success,
+                title: 'Transfer Completed',
+                //@ts-expect-error: can't be undefined at this point
+                subtitle: `There are now ${this._tokenAmount} ${this._currentToken?.name} in ${cropLongStrings(connectionStore._evm.address)} wallet.`,
+                description: 'For security reasons, please wait a minute before making a new request'
+              })
+              break
+            default:
+              cardsStore.setNotification({
+                type: ENotificationType.error,
+                title: 'Something went wrong',
+                description: 'Please select the appropriate Ethereum network and try connecting the wallet again or text in Support'
+              })
+              break
+          }
           cardsStore.setCurrentCard(ECards.notification)
-
           return
         }
 

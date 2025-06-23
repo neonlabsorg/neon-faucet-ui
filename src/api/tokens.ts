@@ -17,9 +17,11 @@ export const TokensApi = {
 
       return data
     } catch(e) {
-      //@ts-expect-error: fix this
-      console.log(e.code)
-      return { error: e }
+      return { error: {
+          //@ts-expect-error: fix this
+          code: e.status
+        }
+      }
     }
   },
   getFaucetTokens: async () => {
