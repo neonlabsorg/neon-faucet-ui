@@ -11,6 +11,7 @@ import { shallowRef, defineAsyncComponent, onMounted, watch } from 'vue'
 import { storeToRefs } from 'pinia'
 
 import { useCardsStore } from '@/stores'
+// @ts-expect-error: this lib exists
 import { CookieControl } from 'vue-shared-components'
 
 const cardsStore = useCardsStore()

@@ -61,7 +61,13 @@ export const useTokensStore = defineStore('tokens',{
           wallet: connectionStore.evmWalletAddress
         })
 
+        if (!connectionStore.isWalletConnected) {
+          return
+        }
+
         if(error) {
+          console.log(error)
+
           switch (error.code) {
             case 429:
               cardsStore.setNotification({

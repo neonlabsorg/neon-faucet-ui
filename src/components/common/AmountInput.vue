@@ -8,6 +8,7 @@
       id="amount"
       class="w-full outline-none bg-violet-200"
       type="text"
+      :disabled="!currentToken"
       v-input-number
       v-model.number="amount"
     />
@@ -15,6 +16,12 @@
 </template>
 
 <script setup lang="ts">
+import { useTokensStore } from '@/stores'
+import { storeToRefs } from 'pinia'
+
+const tokensStore = useTokensStore()
+const { currentToken } = storeToRefs(tokensStore)
+
 const amount = defineModel('amount')
 defineProps<{ inputError: { message: string} | null }>()
 </script>

@@ -21,6 +21,7 @@ export default () => {
       networks: [neonDevnet],
       metadata,
       projectId,
+      defaultNetwork: neonDevnet,
       enableEIP6963: true,
       allWallets: 'HIDE',
       featuredWalletIds: NEON_WALLETS.map((w) => w.id),
