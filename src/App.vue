@@ -60,7 +60,8 @@ onMounted(() => {
 
       if (isConnected) {
         const chainId = Number(caipAddress?.split(':')[1])
-
+        // @ts-expect-error: this is a proper argument
+        wcModal?.value?.resetNetwork(neonDevnet)
         tokensStore.setNeonToken(chainId)
         connectionStore.setEvmConnection({
           address,

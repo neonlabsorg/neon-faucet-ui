@@ -2,7 +2,7 @@
   <CommonCard>
     <div class="w-full flex flex-col gap-1">
       <TokenSelect/>
-      <AmountInput v-model:amount="tokenAmount" :inputError="inputError" />
+      <AmountInput  v-model:amount="tokenAmount" :inputError="inputError" />
       <span v-if="inputError" class="text-sm text-red pl-4">{{ inputError.message }}</span>
     </div>
     <button

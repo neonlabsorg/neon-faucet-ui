@@ -3,15 +3,15 @@
     <MenuLogo class='cursor-pointer' @click='toggleNavigation' />
     <div v-if="menuVisible" class="absolute top-4/4 right-6 sm:right-13 bg-violet-300">
       <div class='flex flex-col py-1 px-1.5 border border-violet-100 rounded-lg text-gray-100 w-menu'>
-        <div v-for="item in menuItems" class='flex gap-2 items-center p-2.5 hover:bg-violet-100 rounded-lg cursor-pointer font-medium' :key='item.label'>
+        <a v-for="item in menuItems" :href="item.url" target="_blank" class='flex gap-2 items-center p-2.5 hover:bg-violet-100 rounded-lg cursor-pointer font-medium' :key='item.label'>
           <component :is="item.Icon"/>
           {{ item.label }}
-        </div>
+        </a>
         <div class="p-2">
-          <button class='w-full flex gap-2 justify-center items-center px-3 py-2 border border-gray-200 rounded-full bg-violet-200 text-sm font-semibold'>
+          <a href="https://discord.com/invite/neonevm" target="_blank" class='w-full flex gap-2 justify-center items-center px-3 py-2 border border-gray-200 rounded-full bg-violet-200 text-sm font-semibold'>
             <Support />
             Support
-          </button>
+          </a>
         </div>
       </div>
     </div>
@@ -29,32 +29,32 @@ const menuVisible = ref(false)
 const menuItems = [
   {
     label: 'FQA',
-    url: '#',
+    url: 'https://neonevm.org/docs/faq/neon-brief-faq',
     Icon: Fqa,
   },
   {
     label: 'Docs',
-    url: '#',
+    url: 'https://neonevm.org/docs/quick_start',
     Icon: Docs,
   },
   {
     label: 'Twitter',
-    url: '#',
+    url: 'https://x.com/Neon_EVM',
     Icon: Twitter,
   },
   {
     label: 'Discord Community',
-    url: '#',
+    url: 'https://discord.com/invite/neonevm',
     Icon: Discord,
   },
   {
     label: 'About Neon',
-    url: '#',
+    url: 'https://www.neonevm.org/blog',
     Icon: About,
   },
   {
     label: 'NeonPass Bridge',
-    url: '#',
+    url: 'https://neonpass.live',
     Icon: Neon,
   },
 ]
