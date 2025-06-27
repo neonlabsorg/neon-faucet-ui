@@ -28,7 +28,7 @@ const menuVisible = ref(false)
 
 const menuItems = [
   {
-    label: 'FQA',
+    label: 'FAQ',
     url: 'https://neonevm.org/docs/faq/neon-brief-faq',
     Icon: Fqa,
   },
@@ -53,7 +53,7 @@ const menuItems = [
     Icon: About,
   },
   {
-    label: 'NeonPass Bridge',
+    label: 'NeonPass',
     url: 'https://neonpass.live',
     Icon: Neon,
   },

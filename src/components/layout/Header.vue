@@ -33,7 +33,11 @@ const connectionStore = useConnectionStore()
 const { isWalletConnected, evmWalletAddress } = storeToRefs(connectionStore)
 
 const handleLogoClick = () => {
-  cardsStore.setCurrentCard(ECards.connect)
+  if (isWalletConnected.value) {
+    cardsStore.setCurrentCard(ECards.form)
+  } else {
+    cardsStore.setCurrentCard(ECards.connect)
+  }
 }
 
 defineEmits(['open'])
