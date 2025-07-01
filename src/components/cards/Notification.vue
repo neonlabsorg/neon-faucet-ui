@@ -30,10 +30,10 @@
           >
             Go to the Main Page
           </button>
-          <button class="w-full flex justify-center items-center gap-2 py-2.5 px-3.5 rounded-full bg-violet-200 border border-gray-400 text-gray-200 cursor-pointer">
+          <a target="_blank" href="https://discord.com/invite/neonevm" class="w-full flex justify-center items-center gap-2 py-2.5 px-3.5 rounded-full bg-violet-200 border border-gray-400 text-gray-200 cursor-pointer">
             <DiscordIcon/>
             Support
-          </button>
+          </a>
         </div>
         <button
           v-if="notification?.type === ENotificationType.success"
