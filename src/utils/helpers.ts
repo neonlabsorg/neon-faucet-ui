@@ -1,39 +1,23 @@
-import { useCallback, useState } from 'react'
-
-export function escapeRegExp(string = '') {
-  return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+export const debounce = (fn: (...args: never[]) => void, delay: number) => {
+  let timeoutId: ReturnType<typeof setTimeout> | null = null
+  return (...args: never[]) => {
+    if (timeoutId) clearTimeout(timeoutId)
+    timeoutId = setTimeout(() => {
+      fn(...args)
+    }, delay)
+  }
 }
 
-export function shortenAddress(address = '', chars = 4) {
-  if (!address.length) return ''
-  return `${address.substring(0, chars + 2)}...${address.substring(42 - chars)}`
+export const isValidUrl = (url: string) => {
+  try {
+    const src = new URL(url);
+
+    return src.protocol === "http:" || src.protocol === "https:";
+  } catch (e) {
+    console.log(e)
+    return false;
+  }
 }
 
-export function useLocalStorageState(key = '', defaultState = '') {
-  const [state, setState] = useState(() => {
-    // NOTE: Not sure if this is ok
-    const storedState = localStorage.getItem(key)
-    if (storedState) {
-      return JSON.parse(storedState)
-    }
-    return defaultState
-  })
-
-  const setLocalStorageState = useCallback(
-    (newState) => {
-      const changed = state !== newState
-      if (!changed) {
-        return
-      }
-      setState(newState)
-      if (newState === null) {
-        localStorage.removeItem(key)
-      } else {
-        localStorage.setItem(key, JSON.stringify(newState))
-      }
-    },
-    [state, key]
-  )
-
-  return [state, setLocalStorageState]
-}
+export const cropLongStrings = (value: string) =>
+  `${value.slice(0, Math.round(10 / 2))}...${value.slice(-Math.round(10 / 2))}`

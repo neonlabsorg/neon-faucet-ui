@@ -27,6 +27,8 @@ jobs:
         run: yarn test
 
       - name: Build
+        env:
+          VITE_REOWN_PROJECT_ID: ${{vars.VITE_REOWN_PROJECT_ID}}
         run: yarn build
 
       - name: Deploy to s3
@@ -38,4 +40,4 @@ jobs:
           AWS_ACCESS_KEY_ID: ${{secrets.FAUCET_UI_DEV_AWS_ACCESS_KEY_ID}}
           AWS_SECRET_ACCESS_KEY: ${{secrets.FAUCET_UI_DEV_AWS_SECRET_ACCESS_KEY}}
           AWS_REGION: ${{secrets.AWS_REGION}}
-          SOURCE_DIR: "build"
+          SOURCE_DIR: "dist"
