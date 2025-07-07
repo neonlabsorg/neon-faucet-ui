@@ -58,7 +58,10 @@ export const useTokensStore = defineStore('tokens',{
         //@ts-expect-error: can't be null at this point
         const { error } = await TokensApi.postTokenAirdrop(this._currentToken, {
           amount: this._tokenAmount,
-          wallet: connectionStore.evmWalletAddress
+          wallet: connectionStore.evmWalletAddress,
+          ...(this._currentToken?.chainId === neonDevnet.id ? {
+            token_addr: this._currentToken.address
+          } : {})
         })
 
         if (!connectionStore.isWalletConnected) {
