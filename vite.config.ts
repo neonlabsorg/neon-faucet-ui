@@ -22,13 +22,6 @@ export default defineConfig({
       '@': fileURLToPath(new URL('./src', import.meta.url))
     },
   },
-  build: {
-    rollupOptions: {
-      external: [
-        /^node:.*/,
-      ]
-    }
-  },
   server: {
     port: 3000,
   }
