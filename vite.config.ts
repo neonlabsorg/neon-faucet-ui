@@ -25,7 +25,7 @@ export default defineConfig({
   build: {
     rollupOptions: {
       external: [
-        'vite-plugin-node-polyfills',
+        /^node:.*/,
       ]
     }
   },
