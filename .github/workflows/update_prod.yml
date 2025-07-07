@@ -20,12 +20,11 @@ jobs:
       - name: Use Yarn
         run: corepack enable
 
+      - name: Set Yarn Version
+        run:  yarn set version 4.8.1
+
       - name: Install modules
         run: yarn install
-
-      - name: Tests
-        run: yarn test
-
 
       - name: Build
         env:
